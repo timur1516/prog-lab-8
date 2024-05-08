@@ -7,6 +7,7 @@ import common.Validators.WorkerValidators;
 import server.DB.DBQueriesExecutors;
 import server.utils.ServerLogger;
 
+import java.io.Serializable;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -252,5 +253,9 @@ public class CollectionController {
      */
     public boolean isEmpty() {
         return this.collection.isEmpty();
+    }
+
+    public PriorityQueue<Worker> getCollection() {
+        return collection;
     }
 }

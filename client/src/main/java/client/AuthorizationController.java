@@ -23,32 +23,6 @@ import java.util.Properties;
  */
 public class AuthorizationController {
     /**
-     * Method to authorize user
-     * <p>It asks user if he already has an account and then complete authorization on server
-     * @return Information about user
-     */
-    public static UserInfo authorize() throws SendingDataException, ReceivingDataException, IOException {
-        YesNoQuestionAsker isRegistered = new YesNoQuestionAsker("Do you already have an account?");
-        if(!isRegistered.ask()) {
-            while (true) {
-                try {
-                    singUp();
-                    break;
-                } catch (AuthorizationException e) {
-                    Console.getInstance().printError(e.getMessage());
-                }
-            }
-        }
-        while (true) {
-            try {
-                return logIn();
-            } catch (AuthorizationException e) {
-                Console.getInstance().printError(e.getMessage());
-            }
-        }
-    }
-
-    /**
      * Method to handle server response after sending authorization request
      * @throws ReceivingDataException If an error occurred while receiving data
      * @throws AuthorizationException If authorization was not successful
@@ -63,23 +37,22 @@ public class AuthorizationController {
     /**
      * Method to complete user log in
      * <p>After reading user's password method loads personal user's pepper, add it to password and then hash it
-     * @return Information about user
      * @throws SendingDataException If an error occurred while sending data to server
      * @throws ReceivingDataException If an error occurred while receiving data from server
      * @throws AuthorizationException If authorization was not successful
      * @throws IOException If an error occurred while reading pepper from property file
      */
-    public static UserInfo logIn() throws SendingDataException, ReceivingDataException, AuthorizationException, IOException {
-        Console.getInstance().print("Enter username: ");
-        String userName = Console.getInstance().readLine();
-        Console.getInstance().print("Enter password: ");
-        String password = Console.getInstance().readLine();
+    public static UserInfo logIn(String userName, String password) throws SendingDataException, ReceivingDataException, AuthorizationException, ConfigurationFileIOException {
+        String pepper = null;
+        try {
+            pepper = new PropertiesFilesController().readProperties(String.format("%s_pepper.properties", userName)).getProperty("pepper");
+        } catch (IOException e) {
+            throw new ConfigurationFileIOException();
+        }
 
-        String pepper = new PropertiesFilesController().readProperties(String.format("%s_pepper.properties", userName)).getProperty("pepper");
+        String hashedPassword = new PasswordHasher().get_SHA_512_SecurePassword(password + pepper);
 
-        password = new PasswordHasher().get_SHA_512_SecurePassword(password + pepper);
-
-        UserInfo userInfo = new UserInfo(userName, password);
+        UserInfo userInfo = new UserInfo(userName, hashedPassword);
         UDPClient.getInstance().sendObject(
                 new ClientRequest(ClientRequestType.LOG_IN, userInfo));
         handleAuthorizationResult();
@@ -96,9 +69,7 @@ public class AuthorizationController {
      * @throws AuthorizationException If authorization was not successful
      * @throws IOException If an error occurred while saving pepper to property file
      */
-    public static void singUp() throws SendingDataException, ReceivingDataException, AuthorizationException, IOException {
-        Console.getInstance().print("Enter username: ");
-        String userName = Console.getInstance().readLine();
+    public static void singUp(String userName, String password, String confirmedPassword) throws SendingDataException, ReceivingDataException, AuthorizationException, ConfigurationFileIOException {
         if(userName.isEmpty()){
             throw new EmptyUsernameException();
         }
@@ -107,10 +78,7 @@ public class AuthorizationController {
                 new ClientRequest(ClientRequestType.CHECK_USERNAME, userName));
         handleAuthorizationResult();
 
-        Console.getInstance().print("Enter password: ");
-        String password = Console.getInstance().readLine();
-        Console.getInstance().print("Confirm password: ");
-        if(!password.equals(Console.getInstance().readLine())){
+        if(!password.equals(confirmedPassword)){
             throw new DifferentPasswordsException();
         }
 
@@ -118,15 +86,17 @@ public class AuthorizationController {
         Properties pepperProperties = new Properties();
         pepperProperties.setProperty("pepper", pepper);
 
-        new PropertiesFilesController().
-                writeProperties(pepperProperties, String.format("%s_pepper.properties", userName), "pepper");
+        try {
+            new PropertiesFilesController().
+                    writeProperties(pepperProperties, String.format("%s_pepper.properties", userName), "pepper");
+        } catch (IOException e) {
+            throw new ConfigurationFileIOException();
+        }
 
-        password = new PasswordHasher().get_SHA_512_SecurePassword(password + pepper);
+        String hashedPassword = new PasswordHasher().get_SHA_512_SecurePassword(password + pepper);
 
         UDPClient.getInstance().sendObject(
-                new ClientRequest(ClientRequestType.SIGN_IN, new UserInfo(userName, password)));
+                new ClientRequest(ClientRequestType.SIGN_IN, new UserInfo(userName, hashedPassword)));
         handleAuthorizationResult();
-
-        Console.getInstance().printLn("User was registered successfully! You can log in now");
     }
 }

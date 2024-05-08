@@ -7,6 +7,9 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 import client.Commands.*;
+import client.GUI.GUIController;
+import client.GUI.MainFormController;
+import common.Collection.Worker;
 import common.Commands.HelpCommand;
 import common.Controllers.CommandsController;
 import client.Readers.WorkerReader;
@@ -21,6 +24,8 @@ import common.net.requests.ClientRequest;
 import common.net.requests.ServerResponse;
 import common.net.dataTransfer.PackedCommand;
 
+import javax.swing.*;
+
 /**
  * Main app class
  * <p>Completes initialization of all controllers, sets default input stream for Console
@@ -32,13 +37,11 @@ public class Main {
      */
     private static WorkerReader workerReader;
     /**
-     * Information about user
-     */
-    private static UserInfo user;
-    /**
      * Controller of commands
      */
     private static CommandsController commandsController;
+
+    private static MainFormController mainFormController;
     /**
      * Main method of program
      * <p>Init all controllers, starts udp client, and start handling user commands
@@ -48,12 +51,15 @@ public class Main {
         Console.getInstance().setScanner(new Scanner(System.in));
         workerReader = new WorkerReader();
 
+        mainFormController = new MainFormController();
+        GUIController.getInstance().setMainFormController(mainFormController);
+
         int serverPort = Constants.DEFAULT_PORT_NUMBER;
         try {
             serverPort = readServerPort();
-            Console.getInstance().printLn(String.format("Server port set to: %d", serverPort));
+            GUIController.getInstance().showInfoMessage(String.format("Server port set to: %d", serverPort));
         } catch (IOException | NumberFormatException e) {
-            Console.getInstance().printLn("Error while reading config file!\n" +
+            GUIController.getInstance().showWarningMessage("Error while reading config file!\n" +
                     "Server port set to default value: 8081\n" +
                     "If you want to change it, create config.properties file and restart program");
         }
@@ -62,31 +68,16 @@ public class Main {
             UDPClient.getInstance().init(InetAddress.getLocalHost(), serverPort, Constants.CLIENT_TIMEOUT);
             UDPClient.getInstance().open();
         } catch (UnknownHostException e) {
-            Console.getInstance().printError("Server host was not found!");
+            GUIController.getInstance().showErrorMessage("Server host was not found!");
             System.exit(0);
         } catch (SocketException e) {
-            Console.getInstance().printError("Error while starting client!");
+            GUIController.getInstance().showErrorMessage("Error while starting client!");
             System.exit(0);
         }
-
-        try {
-            user = AuthorizationController.authorize();
-        } catch (SendingDataException | ReceivingDataException e) {
-            Console.getInstance().printError(e.getMessage());
-            System.exit(0);
-        } catch (IOException e){
-            Console.getInstance().printError("Error occurred while working with configuration files! Please try again later");
-            System.exit(0);
-        }
-
-        Console.getInstance().printLn(String.format("Hello %s!", user.userName()));
-
-        ClientRequest.setUser(user);
 
         commandsController = new CommandsController();
         commandsController.setCommandsList(
                 new ArrayList<>(Arrays.asList(
-                        new HelpCommand(commandsController),
                         new InfoCommand(),
                         new ShowCommand(),
                         new AddCommand(workerReader),
@@ -103,7 +94,6 @@ public class Main {
                         new PrintFieldDescendingSalaryCommand()
                 ))
         );
-        interactiveMode();
     }
 
     /**

@@ -5,7 +5,10 @@ import common.utils.CommonConstants;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Vector;
 
 /**
  *
@@ -205,6 +208,28 @@ public class Worker implements Comparable<Worker>, Serializable {
                 "\t\theight: " + person.getHeight() + "\n" +
                 "\t\teyeColor: " + person.getEyeColor() + "\n" +
                 "\t\tnationality: " + person.getNationality());
+    }
+
+    public Collection<String> getAsStringArray() {
+        Collection<String> list = new ArrayList<>();
+        list.add(String.valueOf(id));
+        list.add(name);
+        list.add(String.valueOf(coordinates.getX()));
+        list.add(String.valueOf(coordinates.getY()));
+        list.add(creationDate.format(CommonConstants.formatter));
+        list.add(String.valueOf(salary));
+        list.add(startDate.toLocalDate().format(CommonConstants.formatter));
+        list.add(!Objects.isNull(endDate) ? endDate.toLocalDate().format(CommonConstants.formatter) : null);
+        list.add(String.valueOf(status));
+        if(person == null){
+            list.add(null); list.add(null); list.add(null);
+        }
+        else{
+            list.add(String.valueOf(person.getHeight()));
+            list.add(person.getEyeColor() == null ? null : String.valueOf(person.getEyeColor()));
+            list.add(person.getNationality() == null ? null : String.valueOf(person.getNationality()));
+        }
+        return list;
     }
 }
 

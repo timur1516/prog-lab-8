@@ -31,10 +31,10 @@ public class ShowCommand extends UserCommand {
      */
     @Override
     public ServerResponse execute() {
-        if(CollectionController.getInstance().isEmpty()){
-            return new ServerResponse(ResultState.SUCCESS,
-                    "Collection is empty");
-        }
-        return new ServerResponse(ResultState.SUCCESS, CollectionController.getInstance().getStringCollection());
+//        if(CollectionController.getInstance().isEmpty()){
+//            return new ServerResponse(ResultState.SUCCESS,
+//                    "Collection is empty");
+//        }
+        return new ServerResponse(ResultState.SUCCESS, CollectionController.getInstance().getCollection());
     }
 }
