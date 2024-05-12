@@ -1,6 +1,7 @@
 package common.Collection;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class to store and work with Person objects
@@ -71,5 +72,17 @@ public class Person implements Serializable {
      */
     public Country getNationality() {
         return nationality;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person person)) return false;
+        return Objects.equals(height, person.height) && eyeColor == person.eyeColor && nationality == person.nationality;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(height, eyeColor, nationality);
     }
 }

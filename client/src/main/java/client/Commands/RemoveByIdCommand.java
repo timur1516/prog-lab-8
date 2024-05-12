@@ -1,6 +1,6 @@
 package client.Commands;
 
-import client.UDPClient;
+import client.net.UDPClient;
 import common.Exceptions.InvalidDataException;
 import common.Exceptions.WrongAmountOfArgumentsException;
 import client.Parsers.WorkerParsers;
@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
  * <p>This command is used to remove element with given id from collection
  * @see UserCommand
  */
-public class RemoveByIdCommand extends UserCommand {
+public class RemoveByIdCommand extends ClientCommand {
     /**
      * id of element to remove
      */
@@ -31,6 +31,10 @@ public class RemoveByIdCommand extends UserCommand {
     public RemoveByIdCommand() {
         super("remove_by_id", "remove element with given id from collection", "id");
     }
+    public RemoveByIdCommand(long id) {
+        super("remove_by_id", "remove element with given id from collection", "id");
+        this.id = id;
+    }
 
     /**
      * Method to complete remove_by_id command
@@ -40,17 +44,9 @@ public class RemoveByIdCommand extends UserCommand {
      */
     @Override
     public ServerResponse execute() {
-        try {
-            ArrayList<Serializable> arguments = new ArrayList<>();
-            arguments.add(id);
-            arguments.add(ClientRequest.getUser().userName());
-            UDPClient.getInstance().sendObject(new ClientRequest(ClientRequestType.EXECUTE_COMMAND,
-                    new PackedCommand(super.getName(), arguments)));
-            return (ServerResponse) UDPClient.getInstance().receiveObject();
-        }
-        catch (Exception e) {
-            return new ServerResponse(ResultState.EXCEPTION, e);
-        }
+        arguments.add(id);
+        arguments.add(ClientRequest.getUser().userName());
+        return sendAndReceive();
     }
 
     /**

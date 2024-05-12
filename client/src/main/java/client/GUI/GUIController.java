@@ -1,12 +1,13 @@
 package client.GUI;
 
+import common.net.requests.ServerResponse;
+
 import javax.swing.*;
 
 public class GUIController {
     private static GUIController GUI_CONTROLLER = null;
     private final JFrame mainFrame;
     private GUIStates state;
-    private MainFormController mainFormController;
 
     public static GUIController getInstance(){
         if(GUI_CONTROLLER == null){
@@ -26,13 +27,9 @@ public class GUIController {
         draw();
     }
 
-    public void setMainFormController(MainFormController mainFormController){
-        this.mainFormController = mainFormController;
-    }
-
     private void draw(){
         JComponent contentPanel = switch (state){
-            case MAIN -> this.mainFormController.getRootComponent();
+            case MAIN -> MainForm.getInstance().$$$getRootComponent$$$();
             case LOG_IN -> (new LogInForm()).$$$getRootComponent$$$();
             case SIGN_UP -> (new SignUpForm().$$$getRootComponent$$$());
         };
@@ -61,7 +58,13 @@ public class GUIController {
         JOptionPane.showMessageDialog(mainFrame, message, "", JOptionPane.WARNING_MESSAGE);
     }
 
-    public MainFormController getMainFormController() {
-        return mainFormController;
+    public void handleServerResponse(ServerResponse response) {
+        switch (response.state()) {
+            case SUCCESS:
+                showInfoMessage(response.data().toString());
+                break;
+            case EXCEPTION:
+                showErrorMessage((Exception) response.data());
+        }
     }
 }

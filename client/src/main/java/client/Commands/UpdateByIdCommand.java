@@ -1,7 +1,7 @@
 package client.Commands;
 
 import client.Readers.WorkerReader;
-import client.UDPClient;
+import client.net.UDPClient;
 import common.Collection.Worker;
 import client.Constants;
 import common.Exceptions.InvalidDataException;
@@ -22,11 +22,11 @@ import java.util.NoSuchElementException;
  * <p>This command is used to update value of collection element which id is equal to given
  * @see UserCommand
  */
-public class UpdateByIdCommand extends UserCommand {
+public class UpdateByIdCommand extends ClientCommand {
     /**
      * Worker reader which is used to read new element from user
      */
-    private WorkerReader workerReader;
+    private Worker worker;
     /**
      * id of element to update
      */
@@ -35,13 +35,18 @@ public class UpdateByIdCommand extends UserCommand {
     /**
      * UpdateByIdCommand constructor
      * <p> Firstly it initializes super constructor by command name, arguments and description
-     * @param workerReader
      */
-    public UpdateByIdCommand(WorkerReader workerReader) {
+    public UpdateByIdCommand() {
         super("update",
                 "update value of collection element which id is equal to given",
                 "id", "{element}");
-        this.workerReader = workerReader;
+    }
+    public UpdateByIdCommand(Worker worker, long id) {
+        super("update",
+                "update value of collection element which id is equal to given",
+                "id", "{element}");
+        this.worker = worker;
+        this.id = id;
     }
 
     /**
@@ -52,30 +57,10 @@ public class UpdateByIdCommand extends UserCommand {
      */
     @Override
     public ServerResponse execute() {
-        try {
-            UDPClient.getInstance().sendObject(new ClientRequest(ClientRequestType.EXECUTE_COMMAND,
-                    new PackedCommand("check_id",
-                            new ArrayList<>(List.of(id, ClientRequest.getUser().userName())))));
-
-            ServerResponse response = (ServerResponse) UDPClient.getInstance().receiveObject();
-
-            if (response.state() == ResultState.EXCEPTION) {
-                if (Constants.SCRIPT_MODE) {
-                    workerReader.readWorker();
-                }
-                return response;
-            }
-            Worker worker = workerReader.readWorker();
-            ArrayList<Serializable> arguments = new ArrayList<>();
-            arguments.add(id);
-            arguments.add(worker);
-            arguments.add(ClientRequest.getUser().userName());
-
-            UDPClient.getInstance().sendObject(new ClientRequest(ClientRequestType.EXECUTE_COMMAND, new PackedCommand(super.getName(), arguments)));
-            return (ServerResponse) UDPClient.getInstance().receiveObject();
-        } catch (Exception e){
-            return new ServerResponse(ResultState.EXCEPTION, e);
-        }
+        arguments.add(id);
+        arguments.add(worker);
+        arguments.add(ClientRequest.getUser().userName());
+        return sendAndReceive();
     }
 
     /**
@@ -90,5 +75,10 @@ public class UpdateByIdCommand extends UserCommand {
         super.initCommandArgs(arguments);
         this.id = WorkerParsers.longParser.parse((String) arguments.get(0));
         WorkerValidators.idValidator.validate(id);
+    }
+
+    @Override
+    public void readData() throws InvalidDataException {
+        worker = WorkerReader.getInstance().readWorker();
     }
 }

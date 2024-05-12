@@ -16,7 +16,7 @@ public abstract class UserCommand implements ICommand {
     /**
      * Command arguments as one String
      */
-    private final String[] arguments;
+    private final String[] argumentsDescription;
     /**
      * Amount of argument which is calculated in constructor
      */
@@ -31,9 +31,9 @@ public abstract class UserCommand implements ICommand {
      * @param name
      * @param description
      */
-    public UserCommand(String name, String description, String ... arguments){
+    public UserCommand(String name, String description, String ... argumentsDescription){
         this.name = name;
-        this.arguments = arguments;
+        this.argumentsDescription = argumentsDescription;
         this.description = description;
         countArgs();
     }
@@ -44,7 +44,7 @@ public abstract class UserCommand implements ICommand {
      */
     private void countArgs(){
         int cnt = 0;
-        for(String arg : this.arguments){
+        for(String arg : this.argumentsDescription){
             if(!arg.contains("{")) cnt += 1;
         }
         this.amountOfArguments = cnt;
@@ -74,13 +74,20 @@ public abstract class UserCommand implements ICommand {
     }
 
     /**
+     * Method to read additional data for command
+     * <p>May be override if necessary
+     */
+    public void readData() throws InvalidDataException{}
+
+
+    /**
      * Method to get String representation of command
      * @return String with command name, arguments and description
      */
     @Override
     public String toString() {
         String res = this.name;
-        for(String arg : this.arguments){
+        for(String arg : this.argumentsDescription){
             res += " " + arg;
         }
         res += ": " + this.description;
@@ -91,11 +98,11 @@ public abstract class UserCommand implements ICommand {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserCommand command)) return false;
-        return Objects.equals(name, command.name) && Objects.equals(arguments, command.arguments) && Objects.equals(description, command.description);
+        return Objects.equals(name, command.name) && Objects.equals(argumentsDescription, command.argumentsDescription) && Objects.equals(description, command.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, arguments, description);
+        return Objects.hash(name, argumentsDescription, description);
     }
 }

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="client.GUI.CommandsDialog">
+  <grid id="cbd77" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="48" y="54" width="436" height="543"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="34c1d" binding="headerPanel" layout-manager="GridBagLayout">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="e89c6" class="javax.swing.JLabel" binding="headerLaber">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag top="10" left="0" bottom="10" right="0" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="24" style="1"/>
+              <text value="Additional commands"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="dfe3b" binding="mainPanel" layout-manager="GridBagLayout">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="59881" class="javax.swing.JButton" binding="clearCommandButton">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Clear collection"/>
+            </properties>
+          </component>
+          <component id="c0cb4" class="javax.swing.JButton" binding="executeScriptCommandButton">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Execute script"/>
+            </properties>
+          </component>
+          <component id="fb0c4" class="javax.swing.JButton" binding="infoCommandButton">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Information about collection"/>
+            </properties>
+          </component>
+          <component id="86b26" class="javax.swing.JButton" binding="minBySalaryCommandButton">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Min by salary"/>
+            </properties>
+          </component>
+          <component id="97474" class="javax.swing.JButton" binding="removeFirstCommandButton">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Remove first"/>
+            </properties>
+          </component>
+          <component id="8ea0d" class="javax.swing.JButton" binding="removeGreaterCommandButton">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Remove greater"/>
+            </properties>
+          </component>
+          <component id="7c86d" class="javax.swing.JButton" binding="removeLowerCommandButton">
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="20" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Remove lower"/>
+            </properties>
+          </component>
+          <grid id="1c603" binding="commandsWithInputPanel" layout-manager="GridBagLayout">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="246bf" class="javax.swing.JButton" binding="filterLessThanEndDateCommandButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="10" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
+                </constraints>
+                <properties>
+                  <font size="16" style="0"/>
+                  <text value="Filter less than end date"/>
+                </properties>
+              </component>
+              <component id="54f3d" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag top="5" left="5" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+                </constraints>
+                <properties>
+                  <columns value="30"/>
+                  <font size="16" style="0"/>
+                </properties>
+              </component>
+              <component id="a8dfa" class="javax.swing.JButton" binding="removeByIdCommandButton">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="10" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
+                </constraints>
+                <properties>
+                  <font size="16" style="0"/>
+                  <text value="Remove by id"/>
+                </properties>
+              </component>
+              <component id="26819" class="javax.swing.JTextField" default-binding="true">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag top="5" left="5" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+                </constraints>
+                <properties>
+                  <columns value="30"/>
+                  <font size="16" style="0"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="36bb8" class="javax.swing.JButton" binding="printFieldDescendingSalaryCommandButton">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="5" left="10" bottom="5" right="10" weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <font size="16" style="0"/>
+              <text value="Descending salary"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

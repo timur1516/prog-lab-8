@@ -1,6 +1,7 @@
 package common.Collection;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class to store and operate with coordinates
@@ -63,5 +64,17 @@ public class Coordinates implements Comparable<Coordinates>, Serializable {
     @Override
     public int compareTo(Coordinates o) {
         return (int) (((this.x * this.x) + (this.y * this.y)) - ((o.x * o.x) + (o.y * o.y)));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Coordinates that)) return false;
+        return Double.compare(x, that.x) == 0 && Double.compare(y, that.y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

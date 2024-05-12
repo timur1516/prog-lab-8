@@ -1,9 +1,10 @@
 package client.Commands;
 
 import client.Readers.WorkerReader;
-import client.UDPClient;
+import client.net.UDPClient;
 import common.Collection.Worker;
 import common.Commands.UserCommand;
+import common.Exceptions.InvalidDataException;
 import common.net.dataTransfer.PackedCommand;
 import common.net.requests.*;
 
@@ -15,20 +16,15 @@ import java.util.ArrayList;
  * <p>This command is used to read data from user and send request to server
  * @see UserCommand
  */
-public class AddCommand extends UserCommand {
-    /**
-     * Worker reader which is used to read new element from user
-     */
-    private WorkerReader workerReader;
+public class AddCommand extends ClientCommand {
+    private Worker worker;
 
-    /**
-     * AddCommand constructor
-     * <p> Firstly it initializes super constructor by command name, arguments and description
-     * @param workerReader
-     */
-    public AddCommand(WorkerReader workerReader) {
+    public AddCommand() {
         super("add", "add new element to collection", "{element}");
-        this.workerReader = workerReader;
+    }
+    public AddCommand(Worker worker) {
+        super("add", "add new element to collection", "{element}");
+        this.worker = worker;
     }
 
     /**
@@ -38,16 +34,13 @@ public class AddCommand extends UserCommand {
      */
     @Override
     public ServerResponse execute() {
-        try {
-            Worker worker = this.workerReader.readWorker();
-            ArrayList<Serializable> arguments = new ArrayList<>();
-            arguments.add(worker);
-            arguments.add(ClientRequest.getUser().userName());
-            UDPClient.getInstance().sendObject(new ClientRequest(ClientRequestType.EXECUTE_COMMAND, new PackedCommand(super.getName(), arguments)));
-            return (ServerResponse) UDPClient.getInstance().receiveObject();
-        }
-        catch (Exception e) {
-            return new ServerResponse(ResultState.EXCEPTION, e);
-        }
+        arguments.add(worker);
+        arguments.add(ClientRequest.getUser().userName());
+        return sendAndReceive();
+    }
+
+    @Override
+    public void readData() throws InvalidDataException {
+        this.worker = WorkerReader.getInstance().readWorker();
     }
 }

@@ -16,6 +16,15 @@ import common.Validators.WorkerValidators;
  * @see Worker
  */
 public class WorkerReader extends ValueReader {
+    private  static  WorkerReader WORKER_READER = null;
+
+    public static WorkerReader getInstance(){
+        if(WORKER_READER == null){
+            WORKER_READER = new WorkerReader();
+        }
+        return WORKER_READER;
+    }
+
     /**
      * Method to read Worker from user input
      * @return Worker object

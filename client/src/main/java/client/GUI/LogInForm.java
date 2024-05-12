@@ -1,15 +1,6 @@
 package client.GUI;
 
-import client.AuthorizationController;
-import client.Commands.ShowCommand;
-import client.Main;
-import common.Collection.Worker;
-import common.Exceptions.ConfigurationFileIOException;
-import common.Exceptions.ReceivingDataException;
-import common.Exceptions.SendingDataException;
-import common.Exceptions.authorization.AuthorizationException;
-import common.UI.Console;
-import common.net.dataTransfer.UserInfo;
+import client.Controllers.AuthorizationController;
 import common.net.requests.ClientRequest;
 
 import javax.swing.*;
@@ -20,9 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Locale;
 
 public class LogInForm {
@@ -48,7 +36,6 @@ public class LogInForm {
                 try {
                     ClientRequest.setUser(AuthorizationController.logIn(username, password));
                     GUIController.getInstance().setState(GUIStates.MAIN);
-                    GUIController.getInstance().getMainFormController().setCollection((Collection<Worker>) (new ShowCommand()).execute().data());
                 } catch (Exception ex) {
                     GUIController.getInstance().showErrorMessage(ex);
                 }

@@ -50,6 +50,7 @@ public class CommandsController implements Cloneable {
                 .findFirst().get();
 
         command.initCommandArgs(packedCommand.arguments());
+        command.readData();
 
         return command;
     }

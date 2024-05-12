@@ -4,6 +4,7 @@ import common.Collection.Worker;
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
 import common.Exceptions.ServerErrorException;
+import common.UI.Console;
 import common.net.requests.ServerResponse;
 import common.net.requests.ResultState;
 import server.Controllers.CollectionController;

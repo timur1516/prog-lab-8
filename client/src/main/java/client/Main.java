@@ -6,21 +6,14 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
 
-import client.Commands.*;
 import client.GUI.GUIController;
-import client.GUI.MainFormController;
-import common.Collection.Worker;
-import common.Commands.HelpCommand;
+import client.net.UDPClient;
 import common.Controllers.CommandsController;
 import client.Readers.WorkerReader;
 import common.Controllers.PropertiesFilesController;
-import common.Exceptions.ReceivingDataException;
-import common.Exceptions.SendingDataException;
 import common.UI.CommandReader;
 import common.UI.Console;
 import common.Commands.UserCommand;
-import common.net.dataTransfer.UserInfo;
-import common.net.requests.ClientRequest;
 import common.net.requests.ServerResponse;
 import common.net.dataTransfer.PackedCommand;
 
@@ -39,9 +32,7 @@ public class Main {
     /**
      * Controller of commands
      */
-    private static CommandsController commandsController;
-
-    private static MainFormController mainFormController;
+    public static CommandsController commandsController;
     /**
      * Main method of program
      * <p>Init all controllers, starts udp client, and start handling user commands
@@ -51,8 +42,9 @@ public class Main {
         Console.getInstance().setScanner(new Scanner(System.in));
         workerReader = new WorkerReader();
 
-        mainFormController = new MainFormController();
-        GUIController.getInstance().setMainFormController(mainFormController);
+        GUIController.getInstance();
+
+        new CollectionUpdaterTask().start();
 
         int serverPort = Constants.DEFAULT_PORT_NUMBER;
         try {
@@ -75,25 +67,25 @@ public class Main {
             System.exit(0);
         }
 
-        commandsController = new CommandsController();
-        commandsController.setCommandsList(
-                new ArrayList<>(Arrays.asList(
-                        new InfoCommand(),
-                        new ShowCommand(),
-                        new AddCommand(workerReader),
-                        new UpdateByIdCommand(workerReader),
-                        new RemoveByIdCommand(),
-                        new ClearCommand(),
-                        new ExecuteScriptCommand(),
-                        new ExitCommand(),
-                        new RemoveFirstCommand(),
-                        new RemoveGreaterCommand(workerReader),
-                        new RemoveLowerCommand(workerReader),
-                        new MinBySalaryCommand(),
-                        new FilterLessThanEndDateCommand(workerReader),
-                        new PrintFieldDescendingSalaryCommand()
-                ))
-        );
+//        commandsController = new CommandsController();
+//        commandsController.setCommandsList(
+//                new ArrayList<>(Arrays.asList(
+//                        new InfoCommand(),
+//                        new ShowCommand(),
+//                        new AddCommand(),
+//                        new UpdateByIdCommand(workerReader),
+//                        new RemoveByIdCommand(),
+//                        new ClearCommand(),
+//                        new ExecuteScriptCommand(),
+//                        new ExitCommand(),
+//                        new RemoveFirstCommand(),
+//                        new RemoveGreaterCommand(workerReader),
+//                        new RemoveLowerCommand(workerReader),
+//                        new MinBySalaryCommand(),
+//                        new FilterLessThanEndDateCommand(workerReader),
+//                        new PrintFieldDescendingSalaryCommand()
+//                ))
+//        );
     }
 
     /**

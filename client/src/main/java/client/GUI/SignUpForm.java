@@ -1,6 +1,6 @@
 package client.GUI;
 
-import client.AuthorizationController;
+import client.Controllers.AuthorizationController;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;

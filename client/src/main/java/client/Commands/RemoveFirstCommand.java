@@ -1,6 +1,6 @@
 package client.Commands;
 
-import client.UDPClient;
+import client.net.UDPClient;
 import common.Commands.UserCommand;
 import common.net.dataTransfer.PackedCommand;
 import common.net.requests.*;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * <p>This command is used to remove first element from collection
  * @see UserCommand
  */
-public class RemoveFirstCommand extends UserCommand {
+public class RemoveFirstCommand extends ClientCommand {
     /**
      * RemoveFirstCommand constructor
      * <p> Firstly it initializes super constructor by command name, arguments and description
@@ -29,14 +29,7 @@ public class RemoveFirstCommand extends UserCommand {
      */
     @Override
     public ServerResponse execute() {
-        try {
-            ArrayList<Serializable> arguments = new ArrayList<>();
-            arguments.add(ClientRequest.getUser().userName());
-            UDPClient.getInstance().sendObject(new ClientRequest(ClientRequestType.EXECUTE_COMMAND, new PackedCommand(super.getName(), arguments)));
-            return (ServerResponse) UDPClient.getInstance().receiveObject();
-        }
-        catch (Exception e) {
-            return new ServerResponse(ResultState.EXCEPTION, e);
-        }
+        arguments.add(ClientRequest.getUser().userName());
+        return sendAndReceive();
     }
 }

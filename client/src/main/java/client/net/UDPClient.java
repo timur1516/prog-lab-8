@@ -1,4 +1,4 @@
-package client;
+package client.net;
 
 import common.Exceptions.ReceivingDataException;
 import common.Exceptions.SendingDataException;
@@ -32,7 +32,7 @@ public class UDPClient {
     int timeout;
 
     private UDPClient(){};
-    public static UDPClient getInstance(){
+    public static synchronized UDPClient getInstance(){
         if(UDP_CLIENT == null){
             UDP_CLIENT = new UDPClient();
         }

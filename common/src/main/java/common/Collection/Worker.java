@@ -5,10 +5,7 @@ import common.utils.CommonConstants;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 
 /**
  *
@@ -210,26 +207,38 @@ public class Worker implements Comparable<Worker>, Serializable {
                 "\t\tnationality: " + person.getNationality());
     }
 
-    public Collection<String> getAsStringArray() {
-        Collection<String> list = new ArrayList<>();
-        list.add(String.valueOf(id));
-        list.add(name);
-        list.add(String.valueOf(coordinates.getX()));
-        list.add(String.valueOf(coordinates.getY()));
-        list.add(creationDate.format(CommonConstants.formatter));
-        list.add(String.valueOf(salary));
-        list.add(startDate.toLocalDate().format(CommonConstants.formatter));
-        list.add(!Objects.isNull(endDate) ? endDate.toLocalDate().format(CommonConstants.formatter) : null);
-        list.add(String.valueOf(status));
+    public LinkedHashMap<String, String> getAsStringMap() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("id", String.valueOf(id));
+        map.put("name", name);
+        map.put("x", String.valueOf(coordinates.getX()));
+        map.put("y", String.valueOf(coordinates.getY()));
+        map.put("creationDate", creationDate.format(CommonConstants.formatter));
+        map.put("salary", String.valueOf(salary));
+        map.put("startDate", startDate.toLocalDate().format(CommonConstants.formatter));
+        map.put("endDate", !Objects.isNull(endDate) ? endDate.toLocalDate().format(CommonConstants.formatter) : "");
+        map.put("status", String.valueOf(status));
         if(person == null){
-            list.add(null); list.add(null); list.add(null);
+            map.put("height", ""); map.put("eyeColor", ""); map.put("nationality", "");
         }
         else{
-            list.add(String.valueOf(person.getHeight()));
-            list.add(person.getEyeColor() == null ? null : String.valueOf(person.getEyeColor()));
-            list.add(person.getNationality() == null ? null : String.valueOf(person.getNationality()));
+            map.put("height", String.valueOf(person.getHeight()));
+            map.put("eyeColor", person.getEyeColor() == null ? "" : String.valueOf(person.getEyeColor()));
+            map.put("nationality", person.getNationality() == null ? "" : String.valueOf(person.getNationality()));
         }
-        return list;
+        return map;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Worker worker)) return false;
+        return id == worker.id && Objects.equals(name, worker.name) && Objects.equals(coordinates, worker.coordinates) && Objects.equals(creationDate, worker.creationDate) && Objects.equals(salary, worker.salary) && Objects.equals(startDate, worker.startDate) && Objects.equals(endDate, worker.endDate) && status == worker.status && Objects.equals(person, worker.person);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, coordinates, creationDate, salary, startDate, endDate, status, person);
     }
 }
 

@@ -1,12 +1,11 @@
-package client;
+package client.Controllers;
 
+import client.net.UDPClient;
 import common.Controllers.PropertiesFilesController;
 import common.Exceptions.*;
 import common.Exceptions.authorization.AuthorizationException;
 import common.Exceptions.authorization.DifferentPasswordsException;
 import common.Exceptions.authorization.EmptyUsernameException;
-import common.UI.Console;
-import common.UI.YesNoQuestionAsker;
 import common.net.dataTransfer.UserInfo;
 import common.net.requests.ClientRequest;
 import common.net.requests.ClientRequestType;
