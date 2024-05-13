@@ -34,30 +34,11 @@ public class CommandsDialog extends JDialog {
         setModal(false);
         setSize(450, 600);
         setResizable(false);
-        revalidate();
 
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         clearCommandButton.addActionListener(e -> GUIController.getInstance().handleServerResponse(new ClearCommand().execute()));
         infoCommandButton.addActionListener(e -> GUIController.getInstance().handleServerResponse(new InfoCommand().execute()));
-    }
-
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
     }
 
     {

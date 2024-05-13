@@ -55,6 +55,9 @@ public class MainForm {
     private JPanel filterPanel;
     private JLabel separatorLabel;
 
+    private VisualizationDialog visualizationDialog;
+    public boolean VISUALIZATION_MODE = false;
+
     private final ArrayList<String> dataTableColumns = new ArrayList<>(Arrays.asList("id", "name", "x", "y", "creationDate", "salary", "startDate", "endDate", "status", "height", "eyeColor", "nationality"));
 
     private MainForm() {
@@ -66,6 +69,11 @@ public class MainForm {
         editButton.addActionListener(new EditButtonListener());
         deleteButton.addActionListener(new DeleteButtonListener());
         commandsButton.addActionListener(new CommandsButtonListener());
+        visualizeButton.addActionListener(new VisualizationButtonListener());
+    }
+
+    public void resetVisualizationMode() {
+        VISUALIZATION_MODE = false;
     }
 
     public void updateDataTable(Collection<Worker> collection) {
@@ -76,6 +84,8 @@ public class MainForm {
         });
         dataTable.setModel(model);
         numberOfWorkersLabel.setText(String.valueOf(collection.size()));
+
+        if (VISUALIZATION_MODE) visualizationDialog.update();
     }
 
     private class CreateButtonActionListener implements ActionListener {
@@ -145,6 +155,18 @@ public class MainForm {
         @Override
         public void actionPerformed(ActionEvent e) {
             new CommandsDialog().setVisible(true);
+        }
+    }
+
+    private class VisualizationButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (VISUALIZATION_MODE) return;
+            VISUALIZATION_MODE = true;
+            visualizationDialog = new VisualizationDialog();
+            visualizationDialog.setVisible(true);
+            visualizationDialog.update();
         }
     }
 
