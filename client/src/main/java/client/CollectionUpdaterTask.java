@@ -16,7 +16,7 @@ public class CollectionUpdaterTask extends Thread{
             if(ClientRequest.getUser() == null) continue;
             try {
                 if(CollectionController.getInstance().updateCollection()){
-                    MainForm.getInstance().updateDataTable(CollectionController.getInstance().getCollection());
+                    MainForm.getInstance().updateDataTable(CollectionController.getInstance().getFiltredCollection());
                 }
             } catch (Exception e) {
                 //TODO add full lock reaction to unavailable server

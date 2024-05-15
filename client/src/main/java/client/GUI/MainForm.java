@@ -4,6 +4,7 @@ import client.Commands.RemoveByIdCommand;
 import client.Commands.UpdateByIdCommand;
 import client.Controllers.CollectionController;
 import client.Commands.AddCommand;
+import client.GUI.visualization.VisualizationFrom;
 import common.Collection.Worker;
 import common.net.requests.ClientRequest;
 import common.net.requests.ServerResponse;
@@ -55,7 +56,7 @@ public class MainForm {
     private JPanel filterPanel;
     private JLabel separatorLabel;
 
-    private VisualizationDialog visualizationDialog;
+    private VisualizationFrom visualizationFrom;
     public boolean VISUALIZATION_MODE = false;
 
     private final ArrayList<String> dataTableColumns = new ArrayList<>(Arrays.asList("id", "name", "x", "y", "creationDate", "salary", "startDate", "endDate", "status", "height", "eyeColor", "nationality"));
@@ -85,7 +86,7 @@ public class MainForm {
         dataTable.setModel(model);
         numberOfWorkersLabel.setText(String.valueOf(collection.size()));
 
-        if (VISUALIZATION_MODE) visualizationDialog.update();
+        if (VISUALIZATION_MODE) visualizationFrom.update();
     }
 
     private class CreateButtonActionListener implements ActionListener {
@@ -105,7 +106,7 @@ public class MainForm {
             if (filterByField == null) return;
             String value = filterTextField.getText().trim();
             CollectionController.getInstance().setFilter(filterByField, value);
-            updateDataTable(CollectionController.getInstance().getCollection());
+            updateDataTable(CollectionController.getInstance().getFiltredCollection());
         }
     }
 
@@ -123,13 +124,17 @@ public class MainForm {
 
             long selectedId = Long.parseLong((String) dataTable.getValueAt(dataTable.getSelectedRow(), 0));
             Worker workerToEdit = CollectionController.getInstance().getCollection().stream().filter(worker -> worker.getId() == selectedId).findFirst().orElseThrow();
-            ReadWorkerDialog readWorkerDialog = new ReadWorkerDialog();
-            readWorkerDialog.fillFields(workerToEdit);
-            Worker newWorker = readWorkerDialog.showDialog();
-            if (newWorker == null) return;
-            ServerResponse response = new UpdateByIdCommand(newWorker, selectedId).execute();
-            GUIController.getInstance().handleServerResponse(response);
+            updateWorker(workerToEdit);
         }
+    }
+
+    public void updateWorker(Worker worker) {
+        ReadWorkerDialog readWorkerDialog = new ReadWorkerDialog();
+        readWorkerDialog.fillFields(worker);
+        Worker newWorker = readWorkerDialog.showDialog();
+        if (newWorker == null) return;
+        ServerResponse response = new UpdateByIdCommand(newWorker, worker.getId()).execute();
+        GUIController.getInstance().handleServerResponse(response);
     }
 
     private class DeleteButtonListener implements ActionListener {
@@ -164,9 +169,9 @@ public class MainForm {
         public void actionPerformed(ActionEvent e) {
             if (VISUALIZATION_MODE) return;
             VISUALIZATION_MODE = true;
-            visualizationDialog = new VisualizationDialog();
-            visualizationDialog.setVisible(true);
-            visualizationDialog.update();
+            visualizationFrom = new VisualizationFrom();
+            visualizationFrom.setVisible(true);
+            visualizationFrom.update();
         }
     }
 

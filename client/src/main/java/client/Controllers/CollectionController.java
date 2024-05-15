@@ -40,8 +40,11 @@ public class CollectionController {
         collection = newCollection;
         return true;
     }
-    public Collection<Worker> getCollection(){
+    public Collection<Worker> getFiltredCollection(){
         return collection.stream().filter(filter).toList();
+    }
+    public Collection<Worker> getCollection(){
+        return collection;
     }
 
     public void setFilter(String fieldName, String value){
