@@ -1,13 +1,16 @@
 package client.GUI;
 
 import client.Exceptions.ValueParsingException;
+import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
+import client.Readers.CalendarReader;
 import client.Readers.ComboBoxReader;
 import client.Readers.TextFieldReader;
 import common.Collection.*;
 import common.Collection.Color;
 import common.Exceptions.InvalidDataException;
 import common.Validators.WorkerValidators;
+import common.utils.CommonConstants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -16,13 +19,10 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.spi.LocaleNameProvider;
 import java.util.stream.Stream;
 
 public class ReadWorkerDialog extends JDialog {
@@ -48,7 +48,6 @@ public class ReadWorkerDialog extends JDialog {
     private JTextField heightTextField;
     private JComboBox eyeColorComboBox;
     private JComboBox nationalityComboBox;
-    private JTextField endDateTextField;
     private JLabel mainInfoLabel;
     private JCheckBox noPersonCheckBox;
     private JLabel coordinatesLabel;
@@ -58,6 +57,8 @@ public class ReadWorkerDialog extends JDialog {
     private JTextField yTextField;
     private JPanel personPanel;
     private JLabel personLabel;
+    private Calendar endDateCalendar;
+    private Calendar startDateCalendar;
 
     private Worker worker;
 
@@ -106,8 +107,17 @@ public class ReadWorkerDialog extends JDialog {
 
         this.nameTextField.setText(workerList.get("name"));
         this.salaryTextField.setText(workerList.get("salary"));
-        this.startDateTextField.setText(workerList.get("startDate"));
-        this.endDateTextField.setText(workerList.get("endDate"));
+
+        LocalDateTime startDate = LocalDateTime.parse(workerList.get("startDate"), CommonConstants.formatter);
+        this.startDateCalendar.getModel().setDate(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth());
+        this.startDateCalendar.getModel().setSelected(true);
+
+        if (!workerList.get("endDate").isEmpty()) {
+            LocalDateTime endDate = LocalDateTime.parse(workerList.get("endDate"), CommonConstants.formatter);
+            this.endDateCalendar.getModel().setDate(endDate.getYear(), endDate.getMonthValue(), endDate.getDayOfMonth());
+            this.endDateCalendar.getModel().setSelected(true);
+        }
+
         this.statusComboBox.setSelectedItem(workerList.get("status"));
 
         this.xTextField.setText(workerList.get("x"));
@@ -151,11 +161,9 @@ public class ReadWorkerDialog extends JDialog {
         Integer salary = TextFieldReader.readValue(salaryTextField, "salary",
                 WorkerValidators.salaryValidator, WorkerParsers.integerParser);
 
-        LocalDateTime startDate = TextFieldReader.readValue(startDateTextField, "start date",
-                WorkerValidators.startDateValidator, WorkerParsers.localDateTimeParser);
+        LocalDateTime startDate = CalendarReader.readValue(startDateCalendar, WorkerValidators.startDateValidator);
 
-        LocalDateTime endDate = TextFieldReader.readValue(endDateTextField, "end date",
-                WorkerValidators.endDateValidator, WorkerParsers.localDateTimeParser);
+        LocalDateTime endDate = CalendarReader.readValue(endDateCalendar, WorkerValidators.endDateValidator);
 
         Status status = ComboBoxReader.readValue(statusComboBox, "status",
                 WorkerValidators.statusValidator, WorkerParsers.statusParser);
@@ -361,30 +369,6 @@ public class ReadWorkerDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 10, 5, 10);
         mainPanel.add(nationalityComboBox, gbc);
-        startDateTextField = new JTextField();
-        Font startDateTextFieldFont = this.$$$getFont$$$(null, Font.PLAIN, 16, startDateTextField.getFont());
-        if (startDateTextFieldFont != null) startDateTextField.setFont(startDateTextFieldFont);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 10, 5, 10);
-        mainPanel.add(startDateTextField, gbc);
-        endDateTextField = new JTextField();
-        Font endDateTextFieldFont = this.$$$getFont$$$(null, Font.PLAIN, 16, endDateTextField.getFont());
-        if (endDateTextFieldFont != null) endDateTextField.setFont(endDateTextFieldFont);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 10, 5, 10);
-        mainPanel.add(endDateTextField, gbc);
         mainInfoLabel = new JLabel();
         Font mainInfoLabelFont = this.$$$getFont$$$(null, Font.BOLD, 16, mainInfoLabel.getFont());
         if (mainInfoLabelFont != null) mainInfoLabel.setFont(mainInfoLabelFont);
@@ -476,6 +460,20 @@ public class ReadWorkerDialog extends JDialog {
         if (noPersonCheckBoxFont != null) noPersonCheckBox.setFont(noPersonCheckBoxFont);
         noPersonCheckBox.setText("no person");
         personPanel.add(noPersonCheckBox);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 10, 5, 10);
+        mainPanel.add(endDateCalendar, gbc);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 10, 5, 10);
+        mainPanel.add(startDateCalendar, gbc);
         menuPanel = new JPanel();
         menuPanel.setLayout(new GridBagLayout());
         contentPane.add(menuPanel, BorderLayout.SOUTH);
@@ -548,5 +546,8 @@ public class ReadWorkerDialog extends JDialog {
         nationalityComboBox = new JComboBox<String>();
         nationalityComboBox.addItem("");
         nationalityItems.forEach(nationalityComboBox::addItem);
+
+        endDateCalendar = new Calendar();
+        startDateCalendar = new Calendar();
     }
 }

@@ -93,6 +93,13 @@ public class CoordinatesNet extends JComponent {
                 redraw();
             }
         });
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                redraw();
+            }
+        });
     }
 
     /**
