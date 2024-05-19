@@ -34,6 +34,6 @@ public class MinBySalaryCommand extends UserCommand {
             return new ServerResponse(ResultState.SUCCESS,"Collection is empty!");
         }
         return new ServerResponse(ResultState.SUCCESS,
-                CollectionController.getInstance().getMinBySalary().toString());
+                CollectionController.getInstance().getMinBySalary());
     }
 }

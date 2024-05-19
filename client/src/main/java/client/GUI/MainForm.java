@@ -55,6 +55,9 @@ public class MainForm {
     private JLabel filterByLabel;
     private JPanel filterPanel;
     private JLabel separatorLabel;
+    private JPanel sortPanel;
+    private JLabel sortLabel;
+    private JComboBox sortComboBox;
 
     private VisualizationFrom visualizationFrom;
     public boolean VISUALIZATION_MODE = false;
@@ -67,6 +70,7 @@ public class MainForm {
 
         createButton.addActionListener(new CreateButtonActionListener());
         filterComboBox.addActionListener(new FilterActionListener());
+        sortComboBox.addActionListener(new SortActionListener());
         editButton.addActionListener(new EditButtonListener());
         deleteButton.addActionListener(new DeleteButtonListener());
         commandsButton.addActionListener(new CommandsButtonListener());
@@ -106,7 +110,17 @@ public class MainForm {
             if (filterByField == null) return;
             String value = filterTextField.getText().trim();
             CollectionController.getInstance().setFilter(filterByField, value);
-            updateDataTable(CollectionController.getInstance().getFiltredCollection());
+            updateDataTable(CollectionController.getInstance().getProcessedCollection());
+        }
+    }
+
+    private class SortActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String orderByField = (String) sortComboBox.getSelectedItem();
+            if (orderByField == null) return;
+            CollectionController.getInstance().setComparator(orderByField);
+            updateDataTable(CollectionController.getInstance().getProcessedCollection());
         }
     }
 
@@ -229,7 +243,7 @@ public class MainForm {
         collectionInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -249,20 +263,12 @@ public class MainForm {
         filterPanel.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.VERTICAL;
         mainMenuPanel.add(filterPanel, gbc);
-        filterByLabel = new JLabel();
-        Font filterByLabelFont = this.$$$getFont$$$(null, Font.PLAIN, 16, filterByLabel.getFont());
-        if (filterByLabelFont != null) filterByLabel.setFont(filterByLabelFont);
-        filterByLabel.setText("Filter by");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.insets = new Insets(0, 0, 0, 10);
-        filterPanel.add(filterByLabel, gbc);
         Font filterComboBoxFont = this.$$$getFont$$$(null, Font.PLAIN, 16, filterComboBox.getFont());
         if (filterComboBoxFont != null) filterComboBox.setFont(filterComboBoxFont);
         gbc = new GridBagConstraints();
@@ -289,6 +295,44 @@ public class MainForm {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.EAST;
         filterPanel.add(filterTextField, gbc);
+        filterByLabel = new JLabel();
+        Font filterByLabelFont = this.$$$getFont$$$(null, Font.PLAIN, 16, filterByLabel.getFont());
+        if (filterByLabelFont != null) filterByLabel.setFont(filterByLabelFont);
+        filterByLabel.setText("Filter by");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(0, 0, 0, 10);
+        filterPanel.add(filterByLabel, gbc);
+        sortPanel = new JPanel();
+        sortPanel.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        mainMenuPanel.add(sortPanel, gbc);
+        sortLabel = new JLabel();
+        Font sortLabelFont = this.$$$getFont$$$(null, Font.PLAIN, 16, sortLabel.getFont());
+        if (sortLabelFont != null) sortLabel.setFont(sortLabelFont);
+        sortLabel.setText("Order by");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(0, 0, 0, 10);
+        sortPanel.add(sortLabel, gbc);
+        Font sortComboBoxFont = this.$$$getFont$$$(null, Font.PLAIN, 16, sortComboBox.getFont());
+        if (sortComboBoxFont != null) sortComboBox.setFont(sortComboBoxFont);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        sortPanel.add(sortComboBox, gbc);
         dataPanel = new JPanel();
         dataPanel.setLayout(new GridBagLayout());
         mainRootPanel.add(dataPanel, BorderLayout.CENTER);
@@ -441,5 +485,9 @@ public class MainForm {
         filterComboBox = new JComboBox();
         filterComboBox.addItem("");
         dataTableColumns.forEach(filterComboBox::addItem);
+
+        sortComboBox = new JComboBox();
+        sortComboBox.addItem("");
+        dataTableColumns.forEach(sortComboBox::addItem);
     }
 }

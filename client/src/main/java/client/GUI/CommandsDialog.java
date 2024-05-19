@@ -1,7 +1,13 @@
 package client.GUI;
 
-import client.Commands.ClearCommand;
-import client.Commands.InfoCommand;
+import client.Commands.*;
+import client.Exceptions.ValueParsingException;
+import client.Parsers.WorkerParsers;
+import client.Readers.TextFieldReader;
+import common.Collection.Worker;
+import common.Exceptions.InvalidDataException;
+import common.Validators.WorkerValidators;
+import common.net.requests.ResultState;
 import common.net.requests.ServerResponse;
 
 import javax.swing.*;
@@ -9,6 +15,7 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 public class CommandsDialog extends JDialog {
@@ -19,15 +26,14 @@ public class CommandsDialog extends JDialog {
     private JButton clearCommandButton;
     private JButton executeScriptCommandButton;
     private JButton filterLessThanEndDateCommandButton;
-    private JButton infoCommandButton;
     private JButton minBySalaryCommandButton;
-    private JButton printFieldDescendingSalaryCommandButton;
     private JButton removeFirstCommandButton;
     private JButton removeGreaterCommandButton;
     private JButton removeLowerCommandButton;
     private JPanel commandsWithInputPanel;
-    private JTextField textField1;
+    private JTextField endDateTextField;
     private JButton removeByIdCommandButton;
+    private JTextField idTextField;
 
     public CommandsDialog() {
         setContentPane(contentPane);
@@ -37,9 +43,84 @@ public class CommandsDialog extends JDialog {
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        clearCommandButton.addActionListener(e -> GUIController.getInstance().handleServerResponse(new ClearCommand().execute()));
-        infoCommandButton.addActionListener(e -> GUIController.getInstance().handleServerResponse(new InfoCommand().execute()));
+        clearCommandButton.addActionListener(new ClearCommandListener());
+        minBySalaryCommandButton.addActionListener(new MinBySalaryCommandListener());
+        filterLessThanEndDateCommandButton.addActionListener(new FilterLessThanEndDateCommandListener());
+        removeByIdCommandButton.addActionListener(new RemoveByIdCommandListener());
+        removeFirstCommandButton.addActionListener(new RemoveFirstCommandListener());
+        removeGreaterCommandButton.addActionListener(new RemoveGreaterCommandListener());
+        removeLowerCommandButton.addActionListener(new RemoveLowerCommandListener());
     }
+
+    private class ClearCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            GUIController.getInstance().handleServerResponse(new ClearCommand().execute());
+        }
+    }
+
+    private class MinBySalaryCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ServerResponse response = new MinBySalaryCommand().execute();
+            if (response.state() == ResultState.EXCEPTION) {
+                GUIController.getInstance().handleServerResponse(response);
+                return;
+            }
+            MainForm.getInstance().updateWorker((Worker) response.data());
+        }
+    }
+
+    private class FilterLessThanEndDateCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //TODO add normal execution (i don't know how( )
+            try {
+                LocalDateTime endDate = TextFieldReader.readValue(endDateTextField, "end Date", WorkerValidators.endDateValidator, WorkerParsers.localDateTimeParser);
+                GUIController.getInstance().handleServerResponse(new FilterLessThanEndDateCommand(endDate).execute());
+            } catch (ValueParsingException | InvalidDataException ex) {
+                GUIController.getInstance().showErrorMessage(ex);
+            }
+        }
+    }
+
+    private class RemoveByIdCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                long id = TextFieldReader.readValue(idTextField, "id", WorkerValidators.idValidator, WorkerParsers.longParser);
+                GUIController.getInstance().handleServerResponse(new RemoveByIdCommand(id).execute());
+            } catch (ValueParsingException | InvalidDataException ex) {
+                GUIController.getInstance().showErrorMessage(ex);
+            }
+        }
+    }
+
+    private class RemoveFirstCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            GUIController.getInstance().handleServerResponse(new RemoveFirstCommand().execute());
+        }
+    }
+
+    private class RemoveGreaterCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Worker worker = new ReadWorkerDialog().showDialog();
+            if (worker == null) return;
+            GUIController.getInstance().handleServerResponse(new RemoveGreaterCommand(worker).execute());
+        }
+    }
+
+    private class RemoveLowerCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Worker worker = new ReadWorkerDialog().showDialog();
+            if (worker == null) return;
+            GUIController.getInstance().handleServerResponse(new RemoveLowerCommand(worker).execute());
+        }
+    }
+
 
     {
 // GUI initializer generated by IntelliJ IDEA GUI Designer
@@ -100,25 +181,13 @@ public class CommandsDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 10, 5, 10);
         mainPanel.add(executeScriptCommandButton, gbc);
-        infoCommandButton = new JButton();
-        Font infoCommandButtonFont = this.$$$getFont$$$(null, Font.PLAIN, 16, infoCommandButton.getFont());
-        if (infoCommandButtonFont != null) infoCommandButton.setFont(infoCommandButtonFont);
-        infoCommandButton.setText("Information about collection");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 10, 5, 10);
-        mainPanel.add(infoCommandButton, gbc);
         minBySalaryCommandButton = new JButton();
         Font minBySalaryCommandButtonFont = this.$$$getFont$$$(null, Font.PLAIN, 16, minBySalaryCommandButton.getFont());
         if (minBySalaryCommandButtonFont != null) minBySalaryCommandButton.setFont(minBySalaryCommandButtonFont);
         minBySalaryCommandButton.setText("Min by salary");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -130,7 +199,7 @@ public class CommandsDialog extends JDialog {
         removeFirstCommandButton.setText("Remove first");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 4;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -142,7 +211,7 @@ public class CommandsDialog extends JDialog {
         removeGreaterCommandButton.setText("Remove greater");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 5;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -154,7 +223,7 @@ public class CommandsDialog extends JDialog {
         removeLowerCommandButton.setText("Remove lower");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 6;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -164,7 +233,7 @@ public class CommandsDialog extends JDialog {
         commandsWithInputPanel.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 3;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -182,10 +251,10 @@ public class CommandsDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 10, 5, 5);
         commandsWithInputPanel.add(filterLessThanEndDateCommandButton, gbc);
-        textField1 = new JTextField();
-        textField1.setColumns(30);
-        Font textField1Font = this.$$$getFont$$$(null, Font.PLAIN, 16, textField1.getFont());
-        if (textField1Font != null) textField1.setFont(textField1Font);
+        endDateTextField = new JTextField();
+        endDateTextField.setColumns(30);
+        Font endDateTextFieldFont = this.$$$getFont$$$(null, Font.PLAIN, 16, endDateTextField.getFont());
+        if (endDateTextFieldFont != null) endDateTextField.setFont(endDateTextFieldFont);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -194,7 +263,7 @@ public class CommandsDialog extends JDialog {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 10);
-        commandsWithInputPanel.add(textField1, gbc);
+        commandsWithInputPanel.add(endDateTextField, gbc);
         removeByIdCommandButton = new JButton();
         Font removeByIdCommandButtonFont = this.$$$getFont$$$(null, Font.PLAIN, 16, removeByIdCommandButton.getFont());
         if (removeByIdCommandButtonFont != null) removeByIdCommandButton.setFont(removeByIdCommandButtonFont);
@@ -207,10 +276,10 @@ public class CommandsDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 10, 5, 5);
         commandsWithInputPanel.add(removeByIdCommandButton, gbc);
-        final JTextField textField2 = new JTextField();
-        textField2.setColumns(30);
-        Font textField2Font = this.$$$getFont$$$(null, Font.PLAIN, 16, textField2.getFont());
-        if (textField2Font != null) textField2.setFont(textField2Font);
+        idTextField = new JTextField();
+        idTextField.setColumns(30);
+        Font idTextFieldFont = this.$$$getFont$$$(null, Font.PLAIN, 16, idTextField.getFont());
+        if (idTextFieldFont != null) idTextField.setFont(idTextFieldFont);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -219,20 +288,7 @@ public class CommandsDialog extends JDialog {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 10);
-        commandsWithInputPanel.add(textField2, gbc);
-        printFieldDescendingSalaryCommandButton = new JButton();
-        Font printFieldDescendingSalaryCommandButtonFont = this.$$$getFont$$$(null, Font.PLAIN, 16, printFieldDescendingSalaryCommandButton.getFont());
-        if (printFieldDescendingSalaryCommandButtonFont != null)
-            printFieldDescendingSalaryCommandButton.setFont(printFieldDescendingSalaryCommandButtonFont);
-        printFieldDescendingSalaryCommandButton.setText("Descending salary");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 10, 5, 10);
-        mainPanel.add(printFieldDescendingSalaryCommandButton, gbc);
+        commandsWithInputPanel.add(idTextField, gbc);
     }
 
     /**

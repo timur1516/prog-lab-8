@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 public class CollectionController {
     private Collection<Worker> collection;
     private Predicate<Worker> filter;
+    private Comparator<Worker> comparator;
     private static CollectionController COLLECTION_CONTROLLER = null;
 
     public static CollectionController getInstance(){
@@ -22,6 +23,7 @@ public class CollectionController {
     }
     private CollectionController(){
         filter = o -> true;
+        comparator = (o1, o2) -> 0;
     };
 
     public boolean updateCollection() throws Exception {
@@ -40,8 +42,8 @@ public class CollectionController {
         collection = newCollection;
         return true;
     }
-    public Collection<Worker> getFiltredCollection(){
-        return collection.stream().filter(filter).toList();
+    public Collection<Worker> getProcessedCollection(){
+        return collection.stream().filter(filter).sorted(comparator).toList();
     }
     public Collection<Worker> getCollection(){
         return collection;
@@ -77,6 +79,25 @@ public class CollectionController {
             };
             case "" -> worker -> true;
             default -> filter;
+        };
+    }
+
+    public void setComparator(String fieldName){
+        comparator = switch (fieldName){
+            case "id" -> Comparator.comparingLong(Worker::getId);
+            case "name" -> Comparator.comparing(Worker::getName);
+            case "x" -> Comparator.comparingDouble(worker -> worker.getCoordinates().getX());
+            case "y" -> Comparator.comparingDouble(worker -> worker.getCoordinates().getY());
+            case "creationDate" -> Comparator.comparing(Worker::getCreationDate);
+            case "salary" -> Comparator.comparingInt(Worker::getSalary);
+            case "startDate" -> Comparator.comparing(Worker::getStartDate);
+            case "endDate" -> Comparator.comparing(Worker::getEndDate, Comparator.nullsLast(Comparator.naturalOrder()));
+            case "status" -> Comparator.comparing(Worker::getStatus);
+            case "height" -> Comparator.comparing(worker -> worker.getPerson() == null ? null : worker.getPerson().getHeight(), Comparator.nullsLast(Comparator.naturalOrder()));
+            case "eyeColor" -> Comparator.comparing(worker -> worker.getPerson() == null ? null : worker.getPerson().getEyeColor(), Comparator.nullsLast(Comparator.naturalOrder()));
+            case "nationality" -> Comparator.comparing(worker -> worker.getPerson() == null ? null : worker.getPerson().getNationality(), Comparator.nullsLast(Comparator.naturalOrder()));
+            case "" -> (o1, o2) -> 0;
+            default -> comparator;
         };
     }
 }
