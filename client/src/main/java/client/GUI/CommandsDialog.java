@@ -1,6 +1,7 @@
 package client.GUI;
 
 import client.Commands.*;
+import client.Controllers.CollectionController;
 import client.Exceptions.ValueParsingException;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
@@ -11,12 +12,16 @@ import common.Exceptions.InvalidDataException;
 import common.Validators.WorkerValidators;
 import common.net.requests.ResultState;
 import common.net.requests.ServerResponse;
+import common.utils.CommonConstants;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Locale;
@@ -42,13 +47,14 @@ public class CommandsDialog extends JDialog {
     public CommandsDialog() {
         $$$setupUI$$$();
         setContentPane(contentPane);
-        setModal(false);
+        setModal(true);
         setSize(450, 600);
         setResizable(false);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         clearCommandButton.addActionListener(new ClearCommandListener());
+        executeScriptCommandButton.addActionListener(new ExecuteScriptCommandListener());
         minBySalaryCommandButton.addActionListener(new MinBySalaryCommandListener());
         filterLessThanEndDateCommandButton.addActionListener(new FilterLessThanEndDateCommandListener());
         removeByIdCommandButton.addActionListener(new RemoveByIdCommandListener());
@@ -64,9 +70,40 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    private class ExecuteScriptCommandListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+            fileChooser.setFileFilter(new FileNameExtensionFilter("TEXT FILES", "txt", "text"));
+
+            int r = fileChooser.showOpenDialog(CommandsDialog.this);
+
+            PrintStream systemStream = System.out;
+
+            if (r == JFileChooser.APPROVE_OPTION) {
+                String logFileName = LocalDateTime.now().format(CommonConstants.formatter).replace(':', '.') + "_script_output.txt";
+                try {
+                    System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(logFileName))));
+                } catch (FileNotFoundException ex) {
+                    GUIController.getInstance().showErrorMessage("Log file for script can't be created");
+                    return;
+                }
+                GUIController.getInstance().handleServerResponse(new ExecuteScriptCommand(fileChooser.getSelectedFile().getAbsolutePath()).execute());
+                System.out.flush();
+                System.out.close();
+                System.setOut(systemStream);
+            }
+        }
+    }
+
     private class MinBySalaryCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (CollectionController.getInstance().getCollection().isEmpty()) {
+                GUIController.getInstance().showInfoMessage("Collection is empty");
+                return;
+            }
             ServerResponse response = new MinBySalaryCommand().execute();
             if (response.state() == ResultState.EXCEPTION) {
                 GUIController.getInstance().handleServerResponse(response);
@@ -80,6 +117,11 @@ public class CommandsDialog extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
+                if (CollectionController.getInstance().getCollection().isEmpty()) {
+                    GUIController.getInstance().showInfoMessage("Collection is empty");
+                    return;
+                }
+
                 LocalDateTime endDate = CalendarReader.readValue(endDateCalendar, WorkerValidators.endDateValidator);
                 if (endDate == null) {
                     GUIController.getInstance().showErrorMessage("Please choose end date");
@@ -91,7 +133,6 @@ public class CommandsDialog extends JDialog {
                     return;
                 }
                 MainForm.getInstance().updateDataTable((Collection<Worker>) response.data());
-                //GUIController.getInstance().handleServerResponse(new FilterLessThanEndDateCommand(endDate).execute());
             } catch (InvalidDataException ex) {
                 GUIController.getInstance().showErrorMessage(ex);
             }

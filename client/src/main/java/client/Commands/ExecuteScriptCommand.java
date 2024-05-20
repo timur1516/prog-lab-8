@@ -1,16 +1,19 @@
 package client.Commands;
 
-import client.Main;
 import client.Constants;
+import common.Controllers.CommandsController;
 import common.Exceptions.InvalidDataException;
 import client.Exceptions.RecursiveScriptException;
 import common.Exceptions.WrongAmountOfArgumentsException;
+import common.UI.CommandReader;
+import common.net.dataTransfer.PackedCommand;
 import common.utils.FileLoader;
 import common.Commands.UserCommand;
 import common.net.requests.ServerResponse;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import common.UI.Console;
 import common.net.requests.ResultState;
@@ -21,6 +24,30 @@ import common.net.requests.ResultState;
  * @see UserCommand
  */
 public class ExecuteScriptCommand extends UserCommand {
+    private static final CommandsController commandsController;
+
+    static {
+        commandsController = new CommandsController();
+        commandsController.setCommandsList(
+                new ArrayList<>(Arrays.asList(
+                        new InfoCommand(),
+                        new ShowCommand(),
+                        new AddCommand(),
+                        new UpdateByIdCommand(),
+                        new RemoveByIdCommand(),
+                        new ClearCommand(),
+                        new ExecuteScriptCommand(),
+                        new ExitCommand(),
+                        new RemoveFirstCommand(),
+                        new RemoveGreaterCommand(),
+                        new RemoveLowerCommand(),
+                        new MinBySalaryCommand(),
+                        new FilterLessThanEndDateCommand(),
+                        new PrintFieldDescendingSalaryCommand()
+                ))
+        );
+    }
+
     /**
      * Path to script file
      */
@@ -32,6 +59,10 @@ public class ExecuteScriptCommand extends UserCommand {
      */
     public ExecuteScriptCommand() {
         super("execute_script", "read and execute script from given file", "file_name");
+    }
+    public ExecuteScriptCommand(String scriptFilePath){
+        super("execute_script", "read and execute script from given file", "file_name");
+        this.scriptFilePath = scriptFilePath;
     }
 
     /**
@@ -45,7 +76,6 @@ public class ExecuteScriptCommand extends UserCommand {
      */
     @Override
     public ServerResponse execute() {
-
         File scriptFile;
         try {
             scriptFile = new FileLoader().loadFile(scriptFilePath, "txt", "r", "Script file");
@@ -71,7 +101,7 @@ public class ExecuteScriptCommand extends UserCommand {
         ServerResponse responce;
 
         try {
-            Main.scriptMode();
+            scriptMode();
             responce = new ServerResponse(ResultState.SUCCESS,"Script executed successfully!");
         }
         catch (Exception e){
@@ -95,5 +125,27 @@ public class ExecuteScriptCommand extends UserCommand {
     public void initCommandArgs(ArrayList<Serializable> arguments) throws WrongAmountOfArgumentsException, InvalidDataException {
         super.initCommandArgs(arguments);
         this.scriptFilePath = (String) arguments.get(0);
+    }
+
+    /**
+     * method which is used to work with script file
+     * @throws Exception if any error occurred in process of executing
+     */
+    private static void scriptMode() throws Exception {
+        while(Console.getInstance().hasNextLine()) {
+            PackedCommand packedCommand = CommandReader.getInstance().readCommand();
+            if(packedCommand == null) continue;
+            Console.getInstance().printLn(packedCommand.commandName());
+
+            UserCommand command = commandsController.launchCommand(packedCommand);
+            ServerResponse response = command.execute();
+            switch (response.state()){
+                case SUCCESS:
+                    Console.getInstance().printLn(response.data());
+                    break;
+                case EXCEPTION:
+                    throw (Exception) response.data();
+            }
+        }
     }
 }

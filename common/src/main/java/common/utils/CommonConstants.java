@@ -17,7 +17,7 @@ public class CommonConstants {
     /**
      * Global format for time
      */
-    public static final String TIME_FROMAT_STRING = "HH:mm";
+    public static final String TIME_FROMAT_STRING = "HH:mm:ss";
     /**
      * Global universal formatter for DateTime objects
      * <p>If time is not given it is set to 00:00
@@ -29,5 +29,6 @@ public class CommonConstants {
             .optionalEnd()
             .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
             .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
             .toFormatter();
 }

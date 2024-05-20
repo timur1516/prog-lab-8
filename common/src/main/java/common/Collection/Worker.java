@@ -4,6 +4,7 @@ import common.utils.CommonConstants;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -194,7 +195,7 @@ public class Worker implements Comparable<Worker>, Serializable {
                 "\t\tx: " + coordinates.getX() + "\n" +
                 "\t\ty: " + coordinates.getY()) + "\n" +
 
-                "\tcreationDate: " + creationDate.format(CommonConstants.formatter) + "\n" +
+                "\tcreationDate: " + creationDate.toOffsetDateTime().atZoneSameInstant(ZoneId.systemDefault()).format(CommonConstants.formatter) + "\n" +
                 "\tsalary: " + salary + "\n" +
                 "\tstartDate: " + startDate.toLocalDate().format(CommonConstants.formatter) + "\n" +
                 "\tendDate: " + (!Objects.isNull(endDate) ? endDate.toLocalDate().format(CommonConstants.formatter) : null) + "\n" +
@@ -213,7 +214,7 @@ public class Worker implements Comparable<Worker>, Serializable {
         map.put("name", name);
         map.put("x", String.valueOf(coordinates.getX()));
         map.put("y", String.valueOf(coordinates.getY()));
-        map.put("creationDate", creationDate.format(CommonConstants.formatter));
+        map.put("creationDate", creationDate.toOffsetDateTime().atZoneSameInstant(ZoneId.systemDefault()).format(CommonConstants.formatter));
         map.put("salary", String.valueOf(salary));
         map.put("startDate", startDate.toLocalDate().format(CommonConstants.formatter));
         map.put("endDate", !Objects.isNull(endDate) ? endDate.toLocalDate().format(CommonConstants.formatter) : "");

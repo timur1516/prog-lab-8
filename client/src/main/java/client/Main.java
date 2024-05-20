@@ -6,16 +6,13 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
 
+import client.Commands.*;
 import client.GUI.GUIController;
 import client.net.UDPClient;
 import common.Controllers.CommandsController;
 import client.Readers.WorkerReader;
 import common.Controllers.PropertiesFilesController;
-import common.UI.CommandReader;
 import common.UI.Console;
-import common.Commands.UserCommand;
-import common.net.requests.ServerResponse;
-import common.net.dataTransfer.PackedCommand;
 
 import javax.swing.*;
 
@@ -26,21 +23,12 @@ import javax.swing.*;
  */
 public class Main {
     /**
-     * Reader elements of collection
-     */
-    private static WorkerReader workerReader;
-    /**
-     * Controller of commands
-     */
-    public static CommandsController commandsController;
-    /**
      * Main method of program
      * <p>Init all controllers, starts udp client, and start handling user commands
      * @param args (not used)
      */
     public static void main(String[] args) {
         Console.getInstance().setScanner(new Scanner(System.in));
-        workerReader = new WorkerReader();
 
         GUIController.getInstance();
 
@@ -66,26 +54,6 @@ public class Main {
             GUIController.getInstance().showErrorMessage("Error while starting client!");
             System.exit(0);
         }
-
-//        commandsController = new CommandsController();
-//        commandsController.setCommandsList(
-//                new ArrayList<>(Arrays.asList(
-//                        new InfoCommand(),
-//                        new ShowCommand(),
-//                        new AddCommand(),
-//                        new UpdateByIdCommand(workerReader),
-//                        new RemoveByIdCommand(),
-//                        new ClearCommand(),
-//                        new ExecuteScriptCommand(),
-//                        new ExitCommand(),
-//                        new RemoveFirstCommand(),
-//                        new RemoveGreaterCommand(workerReader),
-//                        new RemoveLowerCommand(workerReader),
-//                        new MinBySalaryCommand(),
-//                        new FilterLessThanEndDateCommand(workerReader),
-//                        new PrintFieldDescendingSalaryCommand()
-//                ))
-//        );
     }
 
     /**
@@ -97,55 +65,5 @@ public class Main {
     private static int readServerPort() throws IOException, NumberFormatException {
         Properties configProperties = new PropertiesFilesController().readProperties("config.properties");
         return Integer.parseInt(configProperties.getProperty("port"));
-    }
-
-    /**
-     * method which is used to work with script file
-     * @throws Exception if any error occurred in process of executing
-     */
-    public static void scriptMode() throws Exception {
-        while(Console.getInstance().hasNextLine()) {
-            PackedCommand packedCommand = CommandReader.getInstance().readCommand();
-            Console.getInstance().printLn(packedCommand.commandName());
-
-            UserCommand command = commandsController.launchCommand(packedCommand);
-            ServerResponse response = command.execute();
-            switch (response.state()){
-                case SUCCESS:
-                    Console.getInstance().printLn(response.data());
-                    break;
-                case EXCEPTION:
-                    throw (Exception) response.data();
-            }
-        }
-    }
-
-    /**
-     * Method to handle user input
-     *
-     * <p>Reads commands from user, gets their name and arguments, launch command and execute it
-     * <p>If any error is occurred method prints error message and continues to read data
-     */
-    public static void interactiveMode(){
-        while(Console.getInstance().hasNextLine()) {
-            PackedCommand packedCommand = CommandReader.getInstance().readCommand();
-            if(packedCommand == null) continue;
-            UserCommand command;
-            try {
-                command = commandsController.launchCommand(packedCommand);
-            }
-            catch (Exception e){
-                Console.getInstance().printError(e.getMessage());
-                continue;
-            }
-            ServerResponse response = command.execute();
-            switch (response.state()){
-                case SUCCESS:
-                    Console.getInstance().printLn(response.data());
-                    break;
-                case EXCEPTION:
-                    Console.getInstance().printError(((Exception) response.data()).getMessage());
-            }
-        }
     }
 }
