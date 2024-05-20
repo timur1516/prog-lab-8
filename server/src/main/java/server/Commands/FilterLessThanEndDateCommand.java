@@ -39,7 +39,7 @@ public class FilterLessThanEndDateCommand extends UserCommand {
             return new ServerResponse(ResultState.SUCCESS, "Collection is empty!");
         }
         return new ServerResponse(ResultState.SUCCESS,
-                CollectionController.getInstance().getLessThanEndDate(endDate).toString());
+                (Serializable) CollectionController.getInstance().getLessThanEndDate(endDate));
     }
 
     @Override

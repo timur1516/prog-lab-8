@@ -42,8 +42,9 @@ public abstract class ClientCommand extends UserCommand {
      */
     protected ServerResponse sendAndReceive(){
         try {
-            UDPClient.getInstance().sendObject(new ClientRequest(ClientRequestType.EXECUTE_COMMAND, new PackedCommand(super.getName(), arguments)));
-            return (ServerResponse) UDPClient.getInstance().receiveObject();
+            return UDPClient.getInstance()
+                    .sendAndReceive(
+                            new ClientRequest(ClientRequestType.EXECUTE_COMMAND, new PackedCommand(super.getName(), arguments)));
         } catch (ReceivingDataException | SendingDataException e) {
             return new ServerResponse(ResultState.EXCEPTION, e);
         }

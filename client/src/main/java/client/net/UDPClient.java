@@ -2,6 +2,8 @@ package client.net;
 
 import common.Exceptions.ReceivingDataException;
 import common.Exceptions.SendingDataException;
+import common.net.requests.ClientRequest;
+import common.net.requests.ServerResponse;
 import common.utils.Serializer;
 
 import java.io.*;
@@ -72,7 +74,7 @@ public class UDPClient {
      * @return Object which was received
      * @throws ReceivingDataException If any error while receiving data was occurred
      */
-    public Serializable receiveObject() throws ReceivingDataException {
+    private Serializable receiveObject() throws ReceivingDataException {
         try {
             byte arr[] = new byte[PACKET_SIZE];
             DatagramPacket dp = new DatagramPacket(arr, PACKET_SIZE);
@@ -89,7 +91,7 @@ public class UDPClient {
      * @param o Object to send
      * @throws SendingDataException If any error occurred while sending data
      */
-    public void sendObject(Serializable o) throws SendingDataException {
+    private void sendObject(Serializable o) throws SendingDataException {
         try {
             byte arr[] = Serializer.serialize(o);
             DatagramPacket dp = new DatagramPacket(arr, arr.length, this.host, this.port);
@@ -98,5 +100,10 @@ public class UDPClient {
         catch (Exception e){
             throw new SendingDataException("Error while sending data!");
         }
+    }
+
+    public ServerResponse sendAndReceive(ClientRequest request) throws SendingDataException, ReceivingDataException {
+        sendObject(request);
+        return (ServerResponse) receiveObject();
     }
 }

@@ -18,6 +18,7 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Locale;
 
 public class CommandsDialog extends JDialog {
@@ -78,10 +79,19 @@ public class CommandsDialog extends JDialog {
     private class FilterLessThanEndDateCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //TODO add normal execution (i don't know how( )
             try {
                 LocalDateTime endDate = CalendarReader.readValue(endDateCalendar, WorkerValidators.endDateValidator);
-                GUIController.getInstance().handleServerResponse(new FilterLessThanEndDateCommand(endDate).execute());
+                if (endDate == null) {
+                    GUIController.getInstance().showErrorMessage("Please choose end date");
+                    return;
+                }
+                ServerResponse response = new FilterLessThanEndDateCommand(endDate).execute();
+                if (response.state() == ResultState.EXCEPTION) {
+                    GUIController.getInstance().showErrorMessage((Exception) response.data());
+                    return;
+                }
+                MainForm.getInstance().updateDataTable((Collection<Worker>) response.data());
+                //GUIController.getInstance().handleServerResponse(new FilterLessThanEndDateCommand(endDate).execute());
             } catch (InvalidDataException ex) {
                 GUIController.getInstance().showErrorMessage(ex);
             }

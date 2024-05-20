@@ -12,6 +12,7 @@ public class CollectionUpdaterTask extends Thread{
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                break;
             }
             if(ClientRequest.getUser() == null) continue;
             try {

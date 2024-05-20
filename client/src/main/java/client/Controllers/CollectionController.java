@@ -15,7 +15,7 @@ public class CollectionController {
     private Comparator<Worker> comparator;
     private static CollectionController COLLECTION_CONTROLLER = null;
 
-    public static CollectionController getInstance(){
+    public static synchronized CollectionController getInstance(){
         if(COLLECTION_CONTROLLER == null){
             COLLECTION_CONTROLLER = new CollectionController();
         }

@@ -23,11 +23,9 @@ import java.util.Properties;
 public class AuthorizationController {
     /**
      * Method to handle server response after sending authorization request
-     * @throws ReceivingDataException If an error occurred while receiving data
      * @throws AuthorizationException If authorization was not successful
      */
-    private static void handleAuthorizationResult() throws ReceivingDataException, AuthorizationException {
-        ServerResponse response = (ServerResponse) UDPClient.getInstance().receiveObject();
+    private static void handleAuthorizationResult(ServerResponse response) throws AuthorizationException {
         if(response.state() == ResultState.EXCEPTION){
             throw (AuthorizationException) response.data();
         }
@@ -39,10 +37,10 @@ public class AuthorizationController {
      * @throws SendingDataException If an error occurred while sending data to server
      * @throws ReceivingDataException If an error occurred while receiving data from server
      * @throws AuthorizationException If authorization was not successful
-     * @throws IOException If an error occurred while reading pepper from property file
+     * @throws ConfigurationFileIOException If an error occurred while reading pepper from property file
      */
     public static UserInfo logIn(String userName, String password) throws SendingDataException, ReceivingDataException, AuthorizationException, ConfigurationFileIOException {
-        String pepper = null;
+        String pepper;
         try {
             pepper = new PropertiesFilesController().readProperties(String.format("%s_pepper.properties", userName)).getProperty("pepper");
         } catch (IOException e) {
@@ -52,9 +50,8 @@ public class AuthorizationController {
         String hashedPassword = new PasswordHasher().get_SHA_512_SecurePassword(password + pepper);
 
         UserInfo userInfo = new UserInfo(userName, hashedPassword);
-        UDPClient.getInstance().sendObject(
-                new ClientRequest(ClientRequestType.LOG_IN, userInfo));
-        handleAuthorizationResult();
+        handleAuthorizationResult(UDPClient.getInstance()
+                .sendAndReceive(new ClientRequest(ClientRequestType.LOG_IN, userInfo)));
         return userInfo;
     }
 
@@ -73,9 +70,8 @@ public class AuthorizationController {
             throw new EmptyUsernameException();
         }
 
-        UDPClient.getInstance().sendObject(
-                new ClientRequest(ClientRequestType.CHECK_USERNAME, userName));
-        handleAuthorizationResult();
+        handleAuthorizationResult(UDPClient.getInstance()
+                .sendAndReceive(new ClientRequest(ClientRequestType.CHECK_USERNAME, userName)));
 
         if(!password.equals(confirmedPassword)){
             throw new DifferentPasswordsException();
@@ -94,8 +90,7 @@ public class AuthorizationController {
 
         String hashedPassword = new PasswordHasher().get_SHA_512_SecurePassword(password + pepper);
 
-        UDPClient.getInstance().sendObject(
-                new ClientRequest(ClientRequestType.SIGN_IN, new UserInfo(userName, hashedPassword)));
-        handleAuthorizationResult();
+        handleAuthorizationResult(UDPClient.getInstance()
+                .sendAndReceive(new ClientRequest(ClientRequestType.SIGN_IN, new UserInfo(userName, hashedPassword))));
     }
 }
