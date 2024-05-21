@@ -161,6 +161,11 @@ public class CommandsDialog extends JDialog {
     private class RemoveGreaterCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (CollectionController.getInstance().getCollection().isEmpty()) {
+                GUIController.getInstance().showInfoMessage("Collection is empty");
+                return;
+            }
+
             Worker worker = new ReadWorkerDialog().showDialog();
             if (worker == null) return;
             GUIController.getInstance().handleServerResponse(new RemoveGreaterCommand(worker).execute());
@@ -170,6 +175,11 @@ public class CommandsDialog extends JDialog {
     private class RemoveLowerCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (CollectionController.getInstance().getCollection().isEmpty()) {
+                GUIController.getInstance().showInfoMessage("Collection is empty");
+                return;
+            }
+
             Worker worker = new ReadWorkerDialog().showDialog();
             if (worker == null) return;
             GUIController.getInstance().handleServerResponse(new RemoveLowerCommand(worker).execute());

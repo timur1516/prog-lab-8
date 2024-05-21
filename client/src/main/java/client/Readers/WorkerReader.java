@@ -3,6 +3,7 @@ package client.Readers;
 import java.time.LocalDateTime;
 
 import client.Parsers.WorkerParsers;
+import common.net.requests.ClientRequest;
 import common.utils.CommonConstants;
 import common.UI.Console;
 import common.UI.YesNoQuestionAsker;
@@ -54,7 +55,7 @@ public class WorkerReader extends ValueReader {
             if (questionAsker.ask()) person = readPerson();
         }
 
-        return new Worker(0, name, coordinates, null, salary, startDate, endDate, status, person);
+        return new Worker(0, name, coordinates, null, salary, startDate, endDate, status, person, ClientRequest.getUser().userName());
     }
 
     /**
@@ -145,7 +146,9 @@ public class WorkerReader extends ValueReader {
      */
     public Person readPerson() throws InvalidDataException {
         YesNoQuestionAsker questionAsker;
-        long height = readHeight();
+        Long Height = readHeight();
+        if(Height == null) return null;
+        long height = Height;
 
         Color eyeColor = null;
         questionAsker = new YesNoQuestionAsker("Does person has eye color?");
@@ -169,7 +172,7 @@ public class WorkerReader extends ValueReader {
      * @return Long value of height
      * @throws InvalidDataException If input is wrong and script mode is on
      */
-    public long readHeight() throws InvalidDataException {
+    public Long readHeight() throws InvalidDataException {
         return readValue("height", WorkerValidators.heightValidator, WorkerParsers.longParser);
     }
 

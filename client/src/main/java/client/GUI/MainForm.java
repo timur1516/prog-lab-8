@@ -6,6 +6,7 @@ import client.Controllers.CollectionController;
 import client.Commands.AddCommand;
 import client.GUI.visualization.VisualizationFrom;
 import common.Collection.Worker;
+import common.Exceptions.AccessDeniedException;
 import common.net.requests.ClientRequest;
 import common.net.requests.ServerResponse;
 
@@ -143,6 +144,11 @@ public class MainForm {
     }
 
     public void updateWorker(Worker worker) {
+        if (!worker.getUsername().equals(ClientRequest.getUser().userName())) {
+            GUIController.getInstance().showErrorMessage(new AccessDeniedException("You can't edit this element"));
+            return;
+        }
+
         ReadWorkerDialog readWorkerDialog = new ReadWorkerDialog();
         readWorkerDialog.fillFields(worker);
         Worker newWorker = readWorkerDialog.showDialog();

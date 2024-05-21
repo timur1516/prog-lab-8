@@ -17,10 +17,11 @@ public class DBQueries {
      */
     public static PreparedStatement GET_COLLECTION() throws SQLException {
         return DBController.getInstance().getConnection().prepareStatement(
-                "SELECT Worker.id, name, x, y, creationDate, salary, startDate, endDate, status, height, eyeColor, nationality " +
+                "SELECT Worker.id, name, x, y, creationDate, salary, startDate, endDate, status, height, eyeColor, nationality, username " +
                         "FROM Worker " +
                         "LEFT JOIN Coordinates ON Worker.coordinates_id = Coordinates.id " +
-                        "LEFT JOIN Person ON Worker.person_id = Person.id");
+                        "LEFT JOIN Person ON Worker.person_id = Person.id " +
+                        "LEFT JOIN User_info ON Worker.user_id = User_info.id");
     }
 
     /**

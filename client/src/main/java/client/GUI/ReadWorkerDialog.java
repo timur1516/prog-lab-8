@@ -10,6 +10,7 @@ import common.Collection.*;
 import common.Collection.Color;
 import common.Exceptions.InvalidDataException;
 import common.Validators.WorkerValidators;
+import common.net.requests.ClientRequest;
 import common.utils.CommonConstants;
 
 import javax.swing.*;
@@ -191,7 +192,7 @@ public class ReadWorkerDialog extends JDialog {
             person = new Person(height, eyeColor, nationality);
         }
 
-        return new Worker(0, name, coordinates, null, salary, startDate, endDate, status, person);
+        return new Worker(0, name, coordinates, null, salary, startDate, endDate, status, person, ClientRequest.getUser().userName());
     }
 
     /**

@@ -5,7 +5,7 @@ import common.Collection.Worker;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Collection;
+import java.util.*;
 
 public class CoordinatesNet extends JComponent {
     private static final int LEFT_OFFSET = 50;
@@ -35,6 +35,7 @@ public class CoordinatesNet extends JComponent {
     private int tmpY;
 
     private Collection<Worker> collection;
+    private final Map<String, Color> colors;
 
     /**
      * Method to update collection of components on coordinates net
@@ -43,6 +44,10 @@ public class CoordinatesNet extends JComponent {
      */
     public void updateCollection(Collection<Worker> collection){
         this.collection = collection;
+        collection.stream()
+                .map(Worker::getUsername)
+                .filter(username -> !colors.containsKey(username))
+                .forEach(username -> colors.put(username, generateColor()));
         redraw();
     }
 
@@ -58,6 +63,7 @@ public class CoordinatesNet extends JComponent {
     }
 
     public CoordinatesNet(){
+        colors = new LinkedHashMap<>();
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -148,13 +154,19 @@ public class CoordinatesNet extends JComponent {
         g2d.drawString(String.format("Scale: %d%%", (int) Math.round((1 / scale) * 100)), getWidth() - SCALE_TEXT_X_OFFSET, SCALE_TEXT_Y_OFFSET);
     }
 
+    private Color generateColor(){
+        Random random = new Random();
+        return new Color(random.nextInt(0, 256), random.nextInt(0, 256),random.nextInt(0, 256), 200);
+    }
+
     /**
      * Method to redraw all components from collection
      */
     private void redraw(){
         removeAll();
-        collection.forEach(worker -> {
-            WorkerImage workerImage = new WorkerImage(worker, Color.BLUE);
+        long maxSalary = collection.stream().mapToLong(Worker::getSalary).max().orElse(1);
+        collection.stream().sorted(Comparator.comparingLong(Worker::getSalary)).forEachOrdered(worker -> {
+            WorkerImage workerImage = new WorkerImage(worker, colors.get(worker.getUsername()), (double) worker.getSalary() / maxSalary);
             addComponent(workerImage, worker.getCoordinates().getX(), worker.getCoordinates().getY());
         });
         repaint();
@@ -175,7 +187,7 @@ public class CoordinatesNet extends JComponent {
         int nx = x0 - component.getWidth() / 2 + (int) Math.round((x - (isDragging ? tmpX : X0)) / scale);
         int ny = y0 - component.getHeight() / 2 - (int) Math.round((y - (isDragging ? tmpY : Y0)) / scale);
 
-        if(nx < x0 - component.getWidth() / 2 || nx >= getWidth() || ny > y0 - component.getHeight() / 2 || ny >= getHeight()) return;
+        if(nx < x0 - component.getWidth() / 2 || nx > getWidth() - RIGHT_OFFSET - component.getWidth() / 2 || ny > y0 - component.getHeight() / 2 || ny + component.getHeight() / 2 < TOP_OFFSET) return;
 
         add(component);
         component.setLocation(nx, ny);

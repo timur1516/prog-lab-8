@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,21 +19,25 @@ public class WorkerImage extends JComponent {
     private static final int MAX_HEAD_HEIGHT = 5;
     private static final int MIN_HEAD_HEIGHT = 0;
     private static final int ANIMATION_PERIOD = 100;
+    private static final double MAX_SCALE = 3;
+    private static final double MIN_SCALE = 0.5;
 
     private int headHeight = 0;
     private int animationInc = 1;
 
     private final Color backgroundColor;
     private final Worker worker;
+    private final double scale;
 
-    public WorkerImage(Worker worker, Color color){
+    public WorkerImage(Worker worker, Color color, double scale){
         this.worker = worker;
         this.backgroundColor = color;
+        this.scale = Math.max(scale * MAX_SCALE, MIN_SCALE);
         init();
     }
 
     private void init(){
-        setSize(WORKER_RADIUS*2, WORKER_RADIUS*2);
+        setSize((int) Math.round(WORKER_RADIUS*2*scale), (int) Math.round(WORKER_RADIUS*2*scale));
 
         new Timer("Timer").schedule(new TimerTask() {
             @Override
@@ -61,7 +66,9 @@ public class WorkerImage extends JComponent {
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        g2d.scale(scale, scale);
         g2d.setColor(backgroundColor);
         g2d.fillOval(0, 0, WORKER_RADIUS * 2, WORKER_RADIUS * 2);
         g2d.setColor(WORKER_COLOR);

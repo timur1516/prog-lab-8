@@ -31,10 +31,11 @@ public class DBQueriesExecutors {
             Long height = resultSet.getLong("height");
             Color eyeColor = resultSet.getString("eyeColor") == null ? null : Color.valueOf(resultSet.getString("eyeColor"));
             Country nationality = resultSet.getString("nationality") == null ? null : Country.valueOf(resultSet.getString("nationality"));
+            String username = resultSet.getString("username");
 
             Coordinates coordinates = new Coordinates(x, y);
             Person person = height == 0 ? null : new Person(height, eyeColor, nationality);
-            Worker worker = new Worker(id, name, coordinates, creationDate, salary, startDate, endDate, status, person);
+            Worker worker = new Worker(id, name, coordinates, creationDate, salary, startDate, endDate, status, person, username);
             data.add(worker);
         }
 

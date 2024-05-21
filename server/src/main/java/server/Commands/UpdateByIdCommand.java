@@ -3,6 +3,7 @@ package server.Commands;
 import common.Collection.Worker;
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
+import common.Exceptions.AccessDeniedException;
 import common.Exceptions.ServerErrorException;
 import common.UI.Console;
 import common.net.requests.ServerResponse;
@@ -53,6 +54,9 @@ public class UpdateByIdCommand extends UserCommand {
                     new NoSuchElementException("No element with such id!"));
         }
         try {
+            if(!CollectionController.getInstance().checkAccess(id, username)){
+                return new ServerResponse(ResultState.EXCEPTION, new AccessDeniedException("You can't edit this element!"));
+            }
             CollectionController.getInstance().update(id, worker, username);
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -71,7 +71,12 @@ public class Worker implements Comparable<Worker>, Serializable {
      */
     private Person person;
 
-    public Worker(long id, String name, Coordinates coordinates, ZonedDateTime creationDate, Integer salary, LocalDateTime startDate, LocalDateTime endDate, Status status, Person person) {
+    /**
+     * Username of element owner
+     */
+    private String username;
+
+    public Worker(long id, String name, Coordinates coordinates, ZonedDateTime creationDate, Integer salary, LocalDateTime startDate, LocalDateTime endDate, Status status, Person person, String username) {
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
@@ -81,6 +86,7 @@ public class Worker implements Comparable<Worker>, Serializable {
         this.endDate = endDate;
         this.status = status;
         this.person = person;
+        this.username = username;
     }
 
     /**
@@ -163,8 +169,12 @@ public class Worker implements Comparable<Worker>, Serializable {
         return person;
     }
 
-    public void setCreationDate(ZonedDateTime creationDate) {
-        this.creationDate = creationDate;
+    /**
+     * Method to get username of owner
+     * @return String username
+     */
+    public String getUsername(){
+        return username;
     }
 
     /**

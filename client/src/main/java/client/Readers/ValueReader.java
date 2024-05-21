@@ -28,6 +28,7 @@ public abstract class ValueReader {
         while (true) {
             if(!Constants.SCRIPT_MODE) Console.getInstance().print("Enter " + valueName + ": ");
             String s = Console.getInstance().readLine();
+            if(s.equals("-") && Constants.SCRIPT_MODE && valueName.equals("height")) return null;
             try {
                 value = s.isEmpty() ? null : parser.parse(s);
                 validator.validate(value);
