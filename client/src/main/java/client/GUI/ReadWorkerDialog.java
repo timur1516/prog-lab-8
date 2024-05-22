@@ -1,5 +1,6 @@
 package client.GUI;
 
+import client.Controllers.LocaleController;
 import client.Exceptions.ValueParsingException;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 public class ReadWorkerDialog extends JDialog {
@@ -35,7 +37,6 @@ public class ReadWorkerDialog extends JDialog {
     private JButton saveButton;
     private JButton cancelButton;
     private JTextField nameTextField;
-    private JTextField startDateTextField;
     private JComboBox statusComboBox;
     private JLabel nameLabel;
     private JLabel salaryLabel;
@@ -65,7 +66,7 @@ public class ReadWorkerDialog extends JDialog {
 
     public ReadWorkerDialog() {
         $$$setupUI$$$();
-
+        updateLocale();
         setContentPane(contentPane);
         setModal(true);
         setSize(400, 650);
@@ -101,6 +102,27 @@ public class ReadWorkerDialog extends JDialog {
                 nationalityComboBox.setEnabled(ieEnabled);
             }
         });
+    }
+
+    private void updateLocale() {
+        ResourceBundle labels = ResourceBundle.getBundle("MainGuiLabels", LocaleController.getInstance().getCurrentLocale());
+         headerLabel.setText(labels.getString("workerFormHeaderLabel"));
+         saveButton.setText(labels.getString("saveButton"));
+         cancelButton.setText(labels.getString("cancelButton"));
+         nameLabel.setText(labels.getString("nameLabel") + ":");
+         salaryLabel.setText(labels.getString("salaryLabel") + ":");
+         startDateLabel.setText(labels.getString("startDateLabel") + ":");
+         endDateLabel.setText(labels.getString("endDateLabel") + ":");
+         statusLabel.setText(labels.getString("statusLabel") + ":");
+         heightLabel.setText(labels.getString("heightLabel") + ":");
+         eyeColorLabel.setText(labels.getString("eyeColorLabel") + ":");
+         nationalityLabel.setText(labels.getString("nationalityLabel") + ":");
+         mainInfoLabel.setText(labels.getString("mainInfoLabel"));
+         coordinatesLabel.setText(labels.getString("coordinatesLabel"));
+         xLabel.setText(labels.getString("xLabel") + ":");
+         yLabel.setText(labels.getString("yLabel") + ":");
+         personLabel.setText(labels.getString("personLabel"));
+         noPersonCheckBox.setText(labels.getString("noPersonCheckBox"));
     }
 
     public void fillFields(Worker worker) {

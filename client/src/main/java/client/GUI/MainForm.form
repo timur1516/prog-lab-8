@@ -14,7 +14,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="8be2d" binding="userInfoPanel" layout-manager="GridBagLayout">
+          <grid id="8be2d" binding="userInfoPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="1.0" weighty="1.0"/>
@@ -22,11 +22,32 @@
             <properties/>
             <border type="none"/>
             <children>
+              <grid id="fec6e" binding="localePanel" layout-manager="GridBagLayout">
+                <constraints border-constraint="West"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="a6142" class="javax.swing.JComboBox" binding="localeComboBox" custom-create="true">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="0" bottom="0" right="0" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="69105" class="javax.swing.JLabel" binding="localeLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="10" bottom="0" right="10" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="16" style="0"/>
+                      <text value="Language"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
               <grid id="60c85" binding="currentUserPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
+                <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
                 <children>

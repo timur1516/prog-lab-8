@@ -3,6 +3,8 @@ package common.Controllers;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
@@ -18,7 +20,7 @@ public class PropertiesFilesController {
     public Properties readProperties(String filename) throws IOException {
         Properties properties = new Properties();
         FileInputStream inputStream = new FileInputStream(filename);
-        properties.load(inputStream);
+        properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
         return properties;
     }
 

@@ -4,6 +4,7 @@ import client.Commands.RemoveByIdCommand;
 import client.Commands.UpdateByIdCommand;
 import client.Controllers.CollectionController;
 import client.Commands.AddCommand;
+import client.Controllers.LocaleController;
 import client.GUI.visualization.VisualizationFrom;
 import common.Collection.Worker;
 import common.Exceptions.AccessDeniedException;
@@ -59,6 +60,9 @@ public class MainForm {
     private JPanel sortPanel;
     private JLabel sortLabel;
     private JComboBox sortComboBox;
+    private JPanel localePanel;
+    private JComboBox localeComboBox;
+    private JLabel localeLabel;
 
     private VisualizationFrom visualizationFrom;
     public boolean VISUALIZATION_MODE = false;
@@ -67,6 +71,8 @@ public class MainForm {
 
     private MainForm() {
         $$$setupUI$$$();
+        updateLocale();
+        
         usernameLabel.setText(ClientRequest.getUser().userName());
 
         createButton.addActionListener(new CreateButtonActionListener());
@@ -76,6 +82,7 @@ public class MainForm {
         deleteButton.addActionListener(new DeleteButtonListener());
         commandsButton.addActionListener(new CommandsButtonListener());
         visualizeButton.addActionListener(new VisualizationButtonListener());
+        localeComboBox.addActionListener(new LocaleComboBoxListener());
     }
 
     public void resetVisualizationMode() {
@@ -94,6 +101,28 @@ public class MainForm {
         if (VISUALIZATION_MODE) visualizationFrom.update();
     }
 
+    private void updateLocale() {
+        ResourceBundle labels = ResourceBundle.getBundle("MainGuiLabels", LocaleController.getInstance().getCurrentLocale());
+        createButton.setText(labels.getString("createButton"));
+        editButton.setText(labels.getString("editButton"));
+        deleteButton.setText(labels.getString("deleteButton"));
+        visualizeButton.setText(labels.getString("visualizeButton"));
+        commandsButton.setText(labels.getString("commandsButton"));
+        currentUserLabel.setText(labels.getString("currentUserLabel") + ":");
+        workerLabel.setText(labels.getString("workerLabel") + ":");
+        filterByLabel.setText(labels.getString("filterByLabel") + ":");
+        sortLabel.setText(labels.getString("sortLabel") + ":");
+        localeLabel.setText(labels.getString("localeLabel") + ":");
+    }
+
+    private class LocaleComboBoxListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LocaleController.getInstance().setLocale(localeComboBox.getSelectedIndex());
+            updateLocale();
+        }
+    }
+    
     private class CreateButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -211,7 +240,7 @@ public class MainForm {
         menuPanel.setLayout(new GridBagLayout());
         mainRootPanel.add(menuPanel, BorderLayout.NORTH);
         userInfoPanel = new JPanel();
-        userInfoPanel.setLayout(new GridBagLayout());
+        userInfoPanel.setLayout(new BorderLayout(0, 0));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -220,13 +249,32 @@ public class MainForm {
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         menuPanel.add(userInfoPanel, gbc);
-        currentUserPanel = new JPanel();
-        currentUserPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        localePanel = new JPanel();
+        localePanel.setLayout(new GridBagLayout());
+        userInfoPanel.add(localePanel, BorderLayout.WEST);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 0, 0, 0);
+        localePanel.add(localeComboBox, gbc);
+        localeLabel = new JLabel();
+        Font localeLabelFont = this.$$$getFont$$$(null, Font.PLAIN, 16, localeLabel.getFont());
+        if (localeLabelFont != null) localeLabel.setFont(localeLabelFont);
+        localeLabel.setText("Language");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.BOTH;
-        userInfoPanel.add(currentUserPanel, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 10, 0, 10);
+        localePanel.add(localeLabel, gbc);
+        currentUserPanel = new JPanel();
+        currentUserPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        userInfoPanel.add(currentUserPanel, BorderLayout.CENTER);
         currentUserLabel = new JLabel();
         Font currentUserLabelFont = this.$$$getFont$$$(null, Font.PLAIN, 16, currentUserLabel.getFont());
         if (currentUserLabelFont != null) currentUserLabel.setFont(currentUserLabelFont);
@@ -495,5 +543,9 @@ public class MainForm {
         sortComboBox = new JComboBox();
         sortComboBox.addItem("");
         dataTableColumns.forEach(sortComboBox::addItem);
+
+        localeComboBox = new JComboBox<String>();
+        LocaleController.getInstance().getLocaleNames().forEach(localeComboBox::addItem);
+        localeComboBox.setSelectedIndex(LocaleController.getInstance().getCurrentLocaleNumber());
     }
 }

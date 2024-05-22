@@ -2,6 +2,7 @@ package client.GUI;
 
 import client.Commands.*;
 import client.Controllers.CollectionController;
+import client.Controllers.LocaleController;
 import client.Exceptions.ValueParsingException;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
@@ -25,12 +26,13 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class CommandsDialog extends JDialog {
     private JPanel contentPane;
     private JPanel headerPanel;
     private JPanel mainPanel;
-    private JLabel headerLaber;
+    private JLabel headerLabel;
     private JButton clearCommandButton;
     private JButton executeScriptCommandButton;
     private JButton filterLessThanEndDateCommandButton;
@@ -39,13 +41,13 @@ public class CommandsDialog extends JDialog {
     private JButton removeGreaterCommandButton;
     private JButton removeLowerCommandButton;
     private JPanel commandsWithInputPanel;
-    private JTextField endDateTextField;
     private JButton removeByIdCommandButton;
     private JTextField idTextField;
     private Calendar endDateCalendar;
 
     public CommandsDialog() {
         $$$setupUI$$$();
+        updateLocale();
         setContentPane(contentPane);
         setModal(true);
         setSize(450, 600);
@@ -61,6 +63,19 @@ public class CommandsDialog extends JDialog {
         removeFirstCommandButton.addActionListener(new RemoveFirstCommandListener());
         removeGreaterCommandButton.addActionListener(new RemoveGreaterCommandListener());
         removeLowerCommandButton.addActionListener(new RemoveLowerCommandListener());
+    }
+
+    private void updateLocale() {
+        ResourceBundle labels = ResourceBundle.getBundle("MainGuiLabels", LocaleController.getInstance().getCurrentLocale());
+        headerLabel.setText(labels.getString("commandsHeaderLabel"));
+        clearCommandButton.setText(labels.getString("clearCommandButton"));
+        executeScriptCommandButton.setText(labels.getString("executeScriptCommandButton"));
+        filterLessThanEndDateCommandButton.setText(labels.getString("filterLessThanEndDateCommandButton"));
+        minBySalaryCommandButton.setText(labels.getString("minBySalaryCommandButton"));
+        removeFirstCommandButton.setText(labels.getString("removeFirstCommandButton"));
+        removeGreaterCommandButton.setText(labels.getString("removeGreaterCommandButton"));
+        removeLowerCommandButton.setText(labels.getString("removeLowerCommandButton"));
+        removeByIdCommandButton.setText(labels.getString("removeByIdCommandButton"));
     }
 
     private class ClearCommandListener implements ActionListener {
@@ -201,10 +216,10 @@ public class CommandsDialog extends JDialog {
         headerPanel = new JPanel();
         headerPanel.setLayout(new GridBagLayout());
         contentPane.add(headerPanel, BorderLayout.NORTH);
-        headerLaber = new JLabel();
-        Font headerLaberFont = this.$$$getFont$$$(null, Font.BOLD, 24, headerLaber.getFont());
-        if (headerLaberFont != null) headerLaber.setFont(headerLaberFont);
-        headerLaber.setText("Additional commands");
+        headerLabel = new JLabel();
+        Font headerLabelFont = this.$$$getFont$$$(null, Font.BOLD, 24, headerLabel.getFont());
+        if (headerLabelFont != null) headerLabel.setFont(headerLabelFont);
+        headerLabel.setText("Additional commands");
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -212,7 +227,7 @@ public class CommandsDialog extends JDialog {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(10, 0, 10, 0);
-        headerPanel.add(headerLaber, gbc);
+        headerPanel.add(headerLabel, gbc);
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
         contentPane.add(mainPanel, BorderLayout.CENTER);
