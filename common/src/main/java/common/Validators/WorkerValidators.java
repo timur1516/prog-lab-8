@@ -11,10 +11,10 @@ import java.time.ZonedDateTime;
  * <p>All validators realize constraints given by task
  */
 public class WorkerValidators {
-    public static Validator<Worker> workerValidator = new Validator<Worker>() {
+    public static Validator<Worker> workerValidator = new Validator<>() {
         @Override
         public void validate(Worker value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Worker can't be empty!");
+            if (value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "worker");
             idValidator.validate(value.getId());
             nameValidator.validate(value.getName());
             coordinatesValidator.validate(value.getCoordinates());
@@ -29,21 +29,21 @@ public class WorkerValidators {
     public static Validator<Long> idValidator = new Validator<Long>() {
         @Override
         public void validate(Long value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Id can't be empty!");
-            if(value <= 0) throw new InvalidDataException("Id must be greater than zero!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "id");
+            if(value <= 0) throw new InvalidDataException("invalidDataExceptionPositive", "id");
         }
     };
     public static Validator<String> nameValidator = new Validator<String>() {
         @Override
         public void validate(String value) throws InvalidDataException {
-            if(value == null || value.isEmpty()) throw new InvalidDataException("Name can't be empty!");
-            if(value.contains(" ")) throw new InvalidDataException("Name can't contain spaces!");
+            if(value == null || value.isEmpty()) throw new InvalidDataException("invalidDataExceptionEmpty", "name");
+            if(value.contains(" ")) throw new InvalidDataException("invalidDataExceptionSpaces", "name");
         }
     };
     public static Validator<Coordinates> coordinatesValidator = new Validator<Coordinates>() {
         @Override
         public void validate(Coordinates value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Coordinates can't be empty!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "coordinates");
             xValidator.validate(value.getX());
             yValidator.validate(value.getY());
         }
@@ -51,20 +51,20 @@ public class WorkerValidators {
     public static Validator<Double> xValidator = new Validator<Double>() {
         @Override
         public void validate(Double value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("X can't be empty!");
-            if(value > 657) throw new InvalidDataException("x coordinate max value is 657");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "x");
+            if(value > 657) throw new InvalidDataException("invalidDataExceptionMax", "x", 657);
         }
     };
     public static Validator<Double> yValidator = new Validator<Double>() {
         @Override
         public void validate(Double value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Y can't be empty!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "y");
         }
     };
     public static Validator<LocalDateTime> startDateValidator = new Validator<LocalDateTime>() {
         @Override
         public void validate(LocalDateTime value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Start date can't be empty!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "start date");
         }
     };
     public static Validator<LocalDateTime> endDateValidator = new Validator<LocalDateTime>() {
@@ -76,20 +76,20 @@ public class WorkerValidators {
     public static Validator<ZonedDateTime> creationDateValidator = new Validator<ZonedDateTime>() {
         @Override
         public void validate(ZonedDateTime value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Creation date can't be empty!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "creation date");
         }
     };
     public static Validator<Integer> salaryValidator = new Validator<Integer>() {
         @Override
         public void validate(Integer value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Salary can't be empty!");
-            if(value <= 0) throw new InvalidDataException("Salary must be greater than zero!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "salary");
+            if(value <= 0) throw new InvalidDataException("invalidDataExceptionPositive", "salary");
         }
     };
     public static Validator<Status> statusValidator = new Validator<Status>() {
         @Override
         public void validate(Status value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Status can't be empty!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "status");
         }
     };
     public static Validator<Person> personValidator = new Validator<Person>() {
@@ -104,8 +104,8 @@ public class WorkerValidators {
     public static Validator<Long> heightValidator = new Validator<Long>() {
         @Override
         public void validate(Long value) throws InvalidDataException {
-            if(value == null) throw new InvalidDataException("Height can't be empty!");
-            if(value <= 0) throw new InvalidDataException("Height must be greater than zero!");
+            if(value == null) throw new InvalidDataException("invalidDataExceptionEmpty", "height");
+            if(value <= 0) throw new InvalidDataException("invalidDataExceptionPositive", "height");
         }
     };
     public static Validator<Color> eyeColorValidator = new Validator<Color>() {

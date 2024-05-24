@@ -4,6 +4,7 @@ import common.Commands.ICommand;
 import common.Commands.UserCommand;
 import common.Exceptions.InvalidDataException;
 import common.Exceptions.ServerErrorException;
+import common.Exceptions.WrongAmountOfArgumentsException;
 import common.net.requests.ServerResponse;
 import common.net.requests.ResultState;
 import server.Controllers.CollectionController;
@@ -31,7 +32,7 @@ public class ClearCommand extends UserCommand {
     }
 
     @Override
-    public void initCommandArgs(ArrayList<Serializable> arguments) throws InvalidDataException {
+    public void initCommandArgs(ArrayList<Serializable> arguments) throws InvalidDataException, WrongAmountOfArgumentsException {
         super.initCommandArgs(arguments);
         this.username = (String) arguments.get(0);
     }

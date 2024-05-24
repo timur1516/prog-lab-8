@@ -23,7 +23,7 @@ public class WorkerParsers {
         try{
             return Long.parseLong(s);
         } catch (NumberFormatException e){
-            throw new InvalidDataException("Value must be a long!");
+            throw new InvalidDataException("invalidDataExceptionLong");
         }
     };
     /**
@@ -33,7 +33,7 @@ public class WorkerParsers {
         try{
             return Integer.parseInt(s);
         } catch (NumberFormatException e){
-            throw new InvalidDataException("Value must be an integer!");
+            throw new InvalidDataException("invalidDataExceptionInt");
         }
     };
     /**
@@ -43,7 +43,7 @@ public class WorkerParsers {
         try{
             return Double.parseDouble(s);
         } catch (NumberFormatException e){
-            throw new InvalidDataException("Value must be a double!");
+            throw new InvalidDataException("invalidDataExceptionDouble");
         }
     };
     /**
@@ -53,7 +53,7 @@ public class WorkerParsers {
         try{
             return LocalDateTime.parse(s, CommonConstants.formatter);
         } catch (DateTimeParseException e){
-            throw new InvalidDataException("Wrong date format!");
+            throw new InvalidDataException("invalidDataExceptionDate");
         }
     };
     /**
@@ -63,7 +63,7 @@ public class WorkerParsers {
         try{
             return Status.valueOf(s);
         } catch (IllegalArgumentException e){
-            throw new InvalidDataException("Status not found! Please choose value from list!");
+            throw new InvalidDataException("invalidDataExceptionStatus");
         }
     };
     /**
@@ -73,7 +73,7 @@ public class WorkerParsers {
         try{
             return Color.valueOf(s);
         } catch (IllegalArgumentException e){
-            throw new InvalidDataException("Color not found! Please choose value from list!");
+            throw new InvalidDataException("invalidDataExceptionColor");
         }
     };
     /**
@@ -83,7 +83,7 @@ public class WorkerParsers {
         try{
             return Country.valueOf(s);
         } catch (IllegalArgumentException e){
-            throw new InvalidDataException("Country not found! Please choose value from list!");
+            throw new InvalidDataException("invalidDataExceptionCountry");
         }
     };
 }

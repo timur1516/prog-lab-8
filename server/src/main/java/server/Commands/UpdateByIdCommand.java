@@ -55,7 +55,7 @@ public class UpdateByIdCommand extends UserCommand {
         }
         try {
             if(!CollectionController.getInstance().checkAccess(id, username)){
-                return new ServerResponse(ResultState.EXCEPTION, new AccessDeniedException("You can't edit this element!"));
+                return new ServerResponse(ResultState.EXCEPTION, new AccessDeniedException("accessDeniedExceptionEdit"));
             }
             CollectionController.getInstance().update(id, worker, username);
         } catch (SQLException e) {

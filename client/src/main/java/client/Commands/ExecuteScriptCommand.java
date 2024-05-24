@@ -5,6 +5,7 @@ import common.Controllers.CommandsController;
 import common.Exceptions.InvalidDataException;
 import client.Exceptions.RecursiveScriptException;
 import common.Exceptions.WrongAmountOfArgumentsException;
+import common.Exceptions.WrongFilePermissionsException;
 import common.UI.CommandReader;
 import common.net.dataTransfer.PackedCommand;
 import common.utils.FileLoader;
@@ -79,12 +80,12 @@ public class ExecuteScriptCommand extends UserCommand {
         File scriptFile;
         try {
             scriptFile = new FileLoader().loadFile(scriptFilePath, "txt", "r", "Script file");
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | WrongFilePermissionsException e) {
             return new ServerResponse(ResultState.EXCEPTION, e);
         }
 
         if(!Constants.scriptStack.isEmpty() && Constants.scriptStack.contains(scriptFilePath)){
-            return new ServerResponse(ResultState.EXCEPTION, new RecursiveScriptException("Script is recursive!"));
+            return new ServerResponse(ResultState.EXCEPTION, new RecursiveScriptException());
         }
 
         Scanner prevScanner = Console.getInstance().getScanner();

@@ -12,6 +12,7 @@ import client.net.UDPClient;
 import common.Controllers.CommandsController;
 import client.Readers.WorkerReader;
 import common.Controllers.PropertiesFilesController;
+import common.Exceptions.LocalizedException;
 import common.UI.Console;
 
 import javax.swing.*;
@@ -48,10 +49,10 @@ public class Main {
             UDPClient.getInstance().init(InetAddress.getLocalHost(), serverPort, Constants.CLIENT_TIMEOUT);
             UDPClient.getInstance().open();
         } catch (UnknownHostException e) {
-            GUIController.getInstance().showErrorMessage("Server host was not found!");
+            GUIController.getInstance().showErrorMessage(new LocalizedException("serverHostNotFound"));
             System.exit(0);
         } catch (SocketException e) {
-            GUIController.getInstance().showErrorMessage("Error while starting client!");
+            GUIController.getInstance().showErrorMessage(new LocalizedException("clientStartError"));
             System.exit(0);
         }
     }

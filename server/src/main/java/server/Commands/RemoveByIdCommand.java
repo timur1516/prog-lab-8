@@ -5,6 +5,7 @@ import common.Commands.UserCommand;
 import common.Exceptions.AccessDeniedException;
 import common.Exceptions.InvalidDataException;
 import common.Exceptions.ServerErrorException;
+import common.Exceptions.WrongAmountOfArgumentsException;
 import common.net.requests.ServerResponse;
 import common.net.requests.ResultState;
 import server.Controllers.CollectionController;
@@ -52,7 +53,7 @@ public class RemoveByIdCommand extends UserCommand {
         }
         try {
             if(!CollectionController.getInstance().checkAccess(id, username)){
-                return new ServerResponse(ResultState.EXCEPTION, new AccessDeniedException("You can't delete this element!"));
+                return new ServerResponse(ResultState.EXCEPTION, new AccessDeniedException("accessDeniedExceptionDelete"));
             }
             CollectionController.getInstance().removeById(id, username);
         } catch (SQLException e) {
@@ -62,7 +63,7 @@ public class RemoveByIdCommand extends UserCommand {
     }
 
     @Override
-    public void initCommandArgs(ArrayList<Serializable> arguments) throws InvalidDataException {
+    public void initCommandArgs(ArrayList<Serializable> arguments) throws InvalidDataException, WrongAmountOfArgumentsException {
         super.initCommandArgs(arguments);
         this.id = (long) arguments.get(0);
         this.username = (String) arguments.get(1);

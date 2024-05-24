@@ -3,13 +3,13 @@ package client.GUI;
 import client.Commands.*;
 import client.Controllers.CollectionController;
 import client.Controllers.LocaleController;
-import client.Exceptions.ValueParsingException;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
 import client.Readers.CalendarReader;
 import client.Readers.TextFieldReader;
 import common.Collection.Worker;
 import common.Exceptions.InvalidDataException;
+import common.Exceptions.LocalizedException;
 import common.Validators.WorkerValidators;
 import common.net.requests.ResultState;
 import common.net.requests.ServerResponse;
@@ -101,7 +101,7 @@ public class CommandsDialog extends JDialog {
                 try {
                     System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(logFileName))));
                 } catch (FileNotFoundException ex) {
-                    GUIController.getInstance().showErrorMessage("Log file for script can't be created");
+                    GUIController.getInstance().showErrorMessage(new LocalizedException("scriptLogFileError"));
                     return;
                 }
                 GUIController.getInstance().handleServerResponse(new ExecuteScriptCommand(fileChooser.getSelectedFile().getAbsolutePath()).execute());
@@ -139,7 +139,7 @@ public class CommandsDialog extends JDialog {
 
                 LocalDateTime endDate = CalendarReader.readValue(endDateCalendar, WorkerValidators.endDateValidator);
                 if (endDate == null) {
-                    GUIController.getInstance().showErrorMessage("Please choose end date");
+                    GUIController.getInstance().showErrorMessage(new LocalizedException("noEndDate"));
                     return;
                 }
                 ServerResponse response = new FilterLessThanEndDateCommand(endDate).execute();
@@ -160,7 +160,7 @@ public class CommandsDialog extends JDialog {
             try {
                 long id = TextFieldReader.readValue(idTextField, "id", WorkerValidators.idValidator, WorkerParsers.longParser);
                 GUIController.getInstance().handleServerResponse(new RemoveByIdCommand(id).execute());
-            } catch (ValueParsingException | InvalidDataException ex) {
+            } catch (InvalidDataException ex) {
                 GUIController.getInstance().showErrorMessage(ex);
             }
         }

@@ -1,8 +1,12 @@
 package client.GUI;
 
+import client.Controllers.LocaleController;
+import common.Exceptions.LocalizedException;
 import common.net.requests.ServerResponse;
 
 import javax.swing.*;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 public class GUIController {
     private static GUIController GUI_CONTROLLER = null;
@@ -47,10 +51,16 @@ public class GUIController {
     }
 
     public void showErrorMessage(Exception e){
-        showErrorMessage(e.getMessage());
+        if(e instanceof LocalizedException le){
+            ResourceBundle labels = ResourceBundle.getBundle("Exceptions", LocaleController.getInstance().getCurrentLocale());
+            showErrorMessage(MessageFormat.format(labels.getString(le.getMessageKey()), le.getArguments()));
+        }
+        else {
+            showErrorMessage(e.getMessage());
+        }
     }
 
-    public void showErrorMessage(String message){
+    private void showErrorMessage(String message){
         JOptionPane.showMessageDialog(mainFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 

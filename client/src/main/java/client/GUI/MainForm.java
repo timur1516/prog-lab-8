@@ -8,6 +8,7 @@ import client.Controllers.LocaleController;
 import client.GUI.visualization.VisualizationFrom;
 import common.Collection.Worker;
 import common.Exceptions.AccessDeniedException;
+import common.Exceptions.LocalizedException;
 import common.net.requests.ClientRequest;
 import common.net.requests.ServerResponse;
 
@@ -158,11 +159,11 @@ public class MainForm {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (dataTable.getSelectedRowCount() == 0) {
-                GUIController.getInstance().showErrorMessage("Select row to edit please");
+                GUIController.getInstance().showErrorMessage(new LocalizedException("rowToEdit"));
                 return;
             }
             if (dataTable.getSelectedRowCount() > 1) {
-                GUIController.getInstance().showErrorMessage("Select only one row please");
+                GUIController.getInstance().showErrorMessage(new LocalizedException("onlyOneRow"));
                 return;
             }
 
@@ -174,7 +175,7 @@ public class MainForm {
 
     public void updateWorker(Worker worker) {
         if (!worker.getUsername().equals(ClientRequest.getUser().userName())) {
-            GUIController.getInstance().showErrorMessage(new AccessDeniedException("You can't edit this element"));
+            GUIController.getInstance().showErrorMessage(new AccessDeniedException("accessDeniedExceptionEdit"));
             return;
         }
 
@@ -191,11 +192,11 @@ public class MainForm {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (dataTable.getSelectedRowCount() == 0) {
-                GUIController.getInstance().showErrorMessage("Select row to delete please");
+                GUIController.getInstance().showErrorMessage(new LocalizedException("rowToDelete"));
                 return;
             }
             if (dataTable.getSelectedRowCount() > 1) {
-                GUIController.getInstance().showErrorMessage("Select only one row please");
+                GUIController.getInstance().showErrorMessage(new LocalizedException("onlyOneRow"));
                 return;
             }
             long selectedId = Long.parseLong((String) dataTable.getValueAt(dataTable.getSelectedRow(), 0));

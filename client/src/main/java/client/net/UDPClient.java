@@ -82,7 +82,7 @@ public class UDPClient {
             return Serializer.deserialize(arr);
         }
         catch (Exception e){
-            throw new ReceivingDataException("Server error occurred while receiving data!");
+            throw new ReceivingDataException("receivingDataException", "server");
         }
     }
 
@@ -98,7 +98,7 @@ public class UDPClient {
             this.ds.send(dp);
         }
         catch (Exception e){
-            throw new SendingDataException("Error while sending data!");
+            throw new SendingDataException();
         }
     }
 

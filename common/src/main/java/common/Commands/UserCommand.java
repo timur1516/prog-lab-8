@@ -68,8 +68,7 @@ public abstract class UserCommand implements ICommand {
      */
     public void initCommandArgs(ArrayList<Serializable> arguments) throws InvalidDataException, WrongAmountOfArgumentsException {
         if(this.amountOfArguments != arguments.size()){
-            throw new WrongAmountOfArgumentsException("Wrong amount of arguments for command "
-                    + this.name + "!", this.amountOfArguments, arguments.size());
+            throw new WrongAmountOfArgumentsException(this.name, this.amountOfArguments, arguments.size());
         }
     }
 

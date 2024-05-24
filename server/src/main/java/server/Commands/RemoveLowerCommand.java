@@ -65,7 +65,7 @@ public class RemoveLowerCommand extends UserCommand {
      * @throws WrongAmountOfArgumentsException If number of arguments is not equal to zero
      */
     @Override
-    public void initCommandArgs(ArrayList<Serializable> arguments) throws InvalidDataException {
+    public void initCommandArgs(ArrayList<Serializable> arguments) throws InvalidDataException, WrongAmountOfArgumentsException {
         super.initCommandArgs(arguments);
         this.worker = (Worker) arguments.get(0);
         this.username = (String) arguments.get(1);

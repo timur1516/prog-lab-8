@@ -1,7 +1,6 @@
 package client.GUI;
 
 import client.Controllers.LocaleController;
-import client.Exceptions.ValueParsingException;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
 import client.Readers.CalendarReader;
@@ -177,7 +176,7 @@ public class ReadWorkerDialog extends JDialog {
         return worker;
     }
 
-    private Worker readWorker() throws InvalidDataException, ValueParsingException {
+    private Worker readWorker() throws InvalidDataException {
         String name = TextFieldReader.readValue(nameTextField, "name",
                 WorkerValidators.nameValidator, WorkerParsers.stringParser);
 

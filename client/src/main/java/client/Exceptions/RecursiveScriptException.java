@@ -1,16 +1,12 @@
 package client.Exceptions;
 
+import common.Exceptions.LocalizedException;
+
 /**
  * Signals that script is recursive
  */
-public class RecursiveScriptException extends Exception{
-    /**
-     * Constructs an {@code RecursiveScriptException} with the specified detail message.
-     *
-     * @param message
-     *        The detail message
-     */
-    public RecursiveScriptException(String message){
-        super(message);
+public class RecursiveScriptException extends LocalizedException {
+    public RecursiveScriptException(){
+        super("recursiveScriptException");
     }
 }

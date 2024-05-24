@@ -27,7 +27,7 @@ public class FileLoader {
      * @return File object
      * @throws FileNotFoundException If required constraints are not completed
      */
-    public File loadFile(String filePath, String extension, String permissions, String fileName) throws FileNotFoundException {
+    public File loadFile(String filePath, String extension, String permissions, String fileName) throws FileNotFoundException, WrongFilePermissionsException {
         Path path = Paths.get(filePath);
         if(!Files.exists(path)){
             throw new FileNotFoundException(String.format("%s does not exist!", fileName));
@@ -39,10 +39,10 @@ public class FileLoader {
             throw new FileNotFoundException(String.format("%s must be .%s!", fileName, extension));
         }
         if(permissions.contains("r") && !Files.isReadable(path)){
-            throw new WrongFilePermissionsException(String.format("Wrong permissions! %s is not readable!", fileName));
+            throw new WrongFilePermissionsException("wrongFilePermissionsExceptionRead", fileName);
         }
         if(permissions.contains("w") && !Files.isWritable(path)){
-            throw new WrongFilePermissionsException(String.format("Wrong permissions! %s is not writeable!", fileName));
+            throw new WrongFilePermissionsException("wrongFilePermissionsExceptionWrite", fileName);
         }
         return new File(filePath);
     }

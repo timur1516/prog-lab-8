@@ -59,7 +59,7 @@ public class UDPServer {
             return new HandlingTask(clientRequest, clientAddress);
         }
         catch (Exception e){
-            throw new ReceivingDataException("Server error occurred while receiving data!");
+            throw new ReceivingDataException("receivingDataException", "client");
         }
     }
 }

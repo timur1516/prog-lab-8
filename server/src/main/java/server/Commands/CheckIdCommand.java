@@ -43,7 +43,7 @@ public class CheckIdCommand extends UserCommand {
         }
         try {
             if(!CollectionController.getInstance().checkAccess(id, username)){
-                return new ServerResponse(ResultState.EXCEPTION, new AccessDeniedException("You can't modify this element!"));
+                return new ServerResponse(ResultState.EXCEPTION, new AccessDeniedException("accessDeniedExceptionEdit"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
