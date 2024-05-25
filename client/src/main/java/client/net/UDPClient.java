@@ -102,7 +102,7 @@ public class UDPClient {
         }
     }
 
-    public ServerResponse sendAndReceive(ClientRequest request) throws SendingDataException, ReceivingDataException {
+    public synchronized ServerResponse sendAndReceive(ClientRequest request) throws SendingDataException, ReceivingDataException {
         sendObject(request);
         return (ServerResponse) receiveObject();
     }

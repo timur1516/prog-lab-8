@@ -2,10 +2,7 @@ package server.Commands;
 
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
-import common.Exceptions.AccessDeniedException;
-import common.Exceptions.InvalidDataException;
-import common.Exceptions.ServerErrorException;
-import common.Exceptions.WrongAmountOfArgumentsException;
+import common.Exceptions.*;
 import common.net.requests.ServerResponse;
 import common.net.requests.ResultState;
 import server.Controllers.CollectionController;
@@ -49,7 +46,7 @@ public class RemoveByIdCommand extends UserCommand {
     public ServerResponse execute() {
         if(!CollectionController.getInstance().containsId(id)){
             return new ServerResponse(ResultState.EXCEPTION,
-                    new NoSuchElementException("No element with such id!"));
+                    new ElementNotFoundException());
         }
         try {
             if(!CollectionController.getInstance().checkAccess(id, username)){
@@ -59,7 +56,7 @@ public class RemoveByIdCommand extends UserCommand {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return new ServerResponse(ResultState.SUCCESS, "Element removed successfully!");
+        return new ServerResponse(ResultState.SUCCESS, new LocalizedMessage("elementRemovedMessage"));
     }
 
     @Override

@@ -9,6 +9,7 @@ import client.Readers.TextFieldReader;
 import common.Collection.*;
 import common.Collection.Color;
 import common.Exceptions.InvalidDataException;
+import common.Exceptions.LocalizedException;
 import common.Validators.WorkerValidators;
 import common.net.requests.ClientRequest;
 import common.utils.CommonConstants;
@@ -157,7 +158,7 @@ public class ReadWorkerDialog extends JDialog {
     private void onSave() {
         try {
             worker = readWorker();
-        } catch (Exception e) {
+        } catch (LocalizedException e) {
             GUIController.getInstance().showErrorMessage(e);
             return;
         }

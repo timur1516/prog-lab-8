@@ -13,6 +13,7 @@ import common.Controllers.CommandsController;
 import client.Readers.WorkerReader;
 import common.Controllers.PropertiesFilesController;
 import common.Exceptions.LocalizedException;
+import common.Exceptions.LocalizedMessage;
 import common.UI.Console;
 
 import javax.swing.*;
@@ -38,11 +39,9 @@ public class Main {
         int serverPort = Constants.DEFAULT_PORT_NUMBER;
         try {
             serverPort = readServerPort();
-            GUIController.getInstance().showInfoMessage(String.format("Server port set to: %d", serverPort));
+            GUIController.getInstance().showInfoMessage(new LocalizedMessage("serverPortMessage", serverPort));
         } catch (IOException | NumberFormatException e) {
-            GUIController.getInstance().showWarningMessage("Error while reading config file!\n" +
-                    "Server port set to default value: 8081\n" +
-                    "If you want to change it, create config.properties file and restart program");
+            GUIController.getInstance().showWarningMessage(new LocalizedMessage("portConfigMessage", serverPort));
         }
 
         try {

@@ -4,6 +4,7 @@ import common.Collection.Worker;
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
 import common.Exceptions.InvalidDataException;
+import common.Exceptions.LocalizedMessage;
 import common.Exceptions.ServerErrorException;
 import common.Exceptions.WrongAmountOfArgumentsException;
 import common.net.requests.ServerResponse;
@@ -44,7 +45,7 @@ public class RemoveGreaterCommand extends UserCommand {
     @Override
     public ServerResponse execute() {
         if(CollectionController.getInstance().isEmpty()){
-            return new ServerResponse(ResultState.SUCCESS, "Collection is empty!");
+            return new ServerResponse(ResultState.SUCCESS, new LocalizedMessage("emptyCollectionMessage"));
         }
         int elementsRemoved = 0;
         try {
@@ -53,7 +54,7 @@ public class RemoveGreaterCommand extends UserCommand {
             throw  new RuntimeException(e);
         }
         return new ServerResponse(ResultState.SUCCESS,
-                String.format("Successfully removed %d elements!", elementsRemoved));
+                new LocalizedMessage("removedNumElements", elementsRemoved));
     }
 
     @Override

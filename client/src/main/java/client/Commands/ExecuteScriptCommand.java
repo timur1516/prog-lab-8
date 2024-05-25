@@ -1,11 +1,10 @@
 package client.Commands;
 
 import client.Constants;
+import client.Exceptions.ScriptFileReadingException;
 import common.Controllers.CommandsController;
-import common.Exceptions.InvalidDataException;
+import common.Exceptions.*;
 import client.Exceptions.RecursiveScriptException;
-import common.Exceptions.WrongAmountOfArgumentsException;
-import common.Exceptions.WrongFilePermissionsException;
 import common.UI.CommandReader;
 import common.net.dataTransfer.PackedCommand;
 import common.utils.FileLoader;
@@ -18,6 +17,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 import common.UI.Console;
 import common.net.requests.ResultState;
+
+import javax.swing.*;
 
 /**
  * Class with realization of execute_script command
@@ -92,7 +93,7 @@ public class ExecuteScriptCommand extends UserCommand {
         try {
             Console.getInstance().setScanner(new Scanner(new FileInputStream(scriptFile)));
         } catch (FileNotFoundException e) {
-            return new ServerResponse(ResultState.EXCEPTION, "Script file reading error!");
+            return new ServerResponse(ResultState.EXCEPTION, new ScriptFileReadingException());
         }
 
         Constants.scriptStack.push(scriptFilePath);
@@ -103,9 +104,9 @@ public class ExecuteScriptCommand extends UserCommand {
 
         try {
             scriptMode();
-            responce = new ServerResponse(ResultState.SUCCESS,"Script executed successfully!");
+            responce = new ServerResponse(ResultState.SUCCESS,new LocalizedMessage("scriptExecutedMessage"));
         }
-        catch (Exception e){
+        catch (LocalizedException e){
             responce = new ServerResponse(ResultState.EXCEPTION, e);
         }
         finally {
@@ -132,7 +133,7 @@ public class ExecuteScriptCommand extends UserCommand {
      * method which is used to work with script file
      * @throws Exception if any error occurred in process of executing
      */
-    private static void scriptMode() throws Exception {
+    private static void scriptMode() throws LocalizedException {
         while(Console.getInstance().hasNextLine()) {
             PackedCommand packedCommand = CommandReader.getInstance().readCommand();
             if(packedCommand == null) continue;
@@ -145,7 +146,7 @@ public class ExecuteScriptCommand extends UserCommand {
                     Console.getInstance().printLn(response.data());
                     break;
                 case EXCEPTION:
-                    throw (Exception) response.data();
+                    throw (LocalizedException) response.data();
             }
         }
     }

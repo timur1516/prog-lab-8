@@ -3,6 +3,7 @@ package server.Commands;
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
 import common.Exceptions.InvalidDataException;
+import common.Exceptions.LocalizedMessage;
 import common.Exceptions.ServerErrorException;
 import common.Exceptions.WrongAmountOfArgumentsException;
 import common.net.requests.ServerResponse;
@@ -47,7 +48,7 @@ public class RemoveFirstCommand extends UserCommand {
     @Override
     public ServerResponse execute() {
         if(CollectionController.getInstance().isEmpty()){
-            return new ServerResponse(ResultState.SUCCESS, "Collection is empty!");
+            return new ServerResponse(ResultState.SUCCESS, new LocalizedMessage("emptyCollectionMessage"));
         }
         try {
             CollectionController.getInstance().removeFirst(username);
@@ -55,6 +56,6 @@ public class RemoveFirstCommand extends UserCommand {
             throw new RuntimeException(e);
         }
         return new ServerResponse(ResultState.SUCCESS,
-                "Element removed successfully!");
+                new LocalizedMessage("elementRemovedMessage"));
     }
 }

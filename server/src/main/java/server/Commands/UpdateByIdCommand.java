@@ -4,6 +4,8 @@ import common.Collection.Worker;
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
 import common.Exceptions.AccessDeniedException;
+import common.Exceptions.ElementNotFoundException;
+import common.Exceptions.LocalizedMessage;
 import common.Exceptions.ServerErrorException;
 import common.UI.Console;
 import common.net.requests.ServerResponse;
@@ -51,7 +53,7 @@ public class UpdateByIdCommand extends UserCommand {
     public ServerResponse execute() {
         if(!CollectionController.getInstance().containsId(id)){
             return new ServerResponse(ResultState.EXCEPTION,
-                    new NoSuchElementException("No element with such id!"));
+                    new ElementNotFoundException());
         }
         try {
             if(!CollectionController.getInstance().checkAccess(id, username)){
@@ -62,7 +64,7 @@ public class UpdateByIdCommand extends UserCommand {
             throw new RuntimeException(e);
         }
         return new ServerResponse(ResultState.SUCCESS,
-                "Element updated successfully!");
+                new LocalizedMessage("elementUpdatedMessage"));
     }
 
     @Override

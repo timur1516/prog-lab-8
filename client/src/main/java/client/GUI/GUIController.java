@@ -2,6 +2,7 @@ package client.GUI;
 
 import client.Controllers.LocaleController;
 import common.Exceptions.LocalizedException;
+import common.Exceptions.LocalizedMessage;
 import common.net.requests.ServerResponse;
 
 import javax.swing.*;
@@ -46,35 +47,37 @@ public class GUIController {
         draw();
     }
 
-    public void showInfoMessage(String message){
-        JOptionPane.showMessageDialog(mainFrame, message, "", JOptionPane.INFORMATION_MESSAGE);
+    public void showInfoMessage(LocalizedMessage message){
+        ResourceBundle labels = ResourceBundle.getBundle("Messages",
+                LocaleController.getInstance().getCurrentLocale());
+        JOptionPane.showMessageDialog(mainFrame,
+                MessageFormat.format(labels.getString(message.getMessageKey()), message.getArguments()),
+                "", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void showErrorMessage(Exception e){
-        if(e instanceof LocalizedException le){
-            ResourceBundle labels = ResourceBundle.getBundle("Exceptions", LocaleController.getInstance().getCurrentLocale());
-            showErrorMessage(MessageFormat.format(labels.getString(le.getMessageKey()), le.getArguments()));
-        }
-        else {
-            showErrorMessage(e.getMessage());
-        }
+    public void showErrorMessage(LocalizedException e){
+        ResourceBundle labels = ResourceBundle.getBundle("Exceptions",
+                LocaleController.getInstance().getCurrentLocale());
+        JOptionPane.showMessageDialog(mainFrame,
+                MessageFormat.format(labels.getString(e.getMessageKey()), e.getArguments()),
+                "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void showErrorMessage(String message){
-        JOptionPane.showMessageDialog(mainFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public void showWarningMessage(String message){
-        JOptionPane.showMessageDialog(mainFrame, message, "", JOptionPane.WARNING_MESSAGE);
+    public void showWarningMessage(LocalizedMessage message){
+        ResourceBundle labels = ResourceBundle.getBundle("Messages",
+                LocaleController.getInstance().getCurrentLocale());
+        JOptionPane.showMessageDialog(mainFrame,
+                MessageFormat.format(labels.getString(message.getMessageKey()), message.getArguments()),
+                "Attention", JOptionPane.WARNING_MESSAGE);
     }
 
     public void handleServerResponse(ServerResponse response) {
         switch (response.state()) {
             case SUCCESS:
-                showInfoMessage(response.data().toString());
+                showInfoMessage((LocalizedMessage) response.data());
                 break;
             case EXCEPTION:
-                showErrorMessage((Exception) response.data());
+                showErrorMessage((LocalizedException) response.data());
         }
     }
 }

@@ -2,6 +2,8 @@ package client.GUI;
 
 import client.Controllers.AuthorizationController;
 import client.Controllers.LocaleController;
+import common.Exceptions.LocalizedException;
+import common.Exceptions.LocalizedMessage;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -80,9 +82,9 @@ public class SignUpForm {
             String confirmedPassword = confirmPasswordTextField.getText();
             try {
                 AuthorizationController.singUp(username, password, confirmedPassword);
-                GUIController.getInstance().showInfoMessage("Authorization completed!\nYou can log In now");
+                GUIController.getInstance().showInfoMessage(new LocalizedMessage("authorizationDoneMessage"));
                 GUIController.getInstance().setState(GUIStates.LOG_IN);
-            } catch (Exception ex) {
+            } catch (LocalizedException ex) {
                 GUIController.getInstance().showErrorMessage(ex);
             }
         }

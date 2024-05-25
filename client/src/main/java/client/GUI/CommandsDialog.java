@@ -10,6 +10,7 @@ import client.Readers.TextFieldReader;
 import common.Collection.Worker;
 import common.Exceptions.InvalidDataException;
 import common.Exceptions.LocalizedException;
+import common.Exceptions.LocalizedMessage;
 import common.Validators.WorkerValidators;
 import common.net.requests.ResultState;
 import common.net.requests.ServerResponse;
@@ -116,7 +117,7 @@ public class CommandsDialog extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (CollectionController.getInstance().getCollection().isEmpty()) {
-                GUIController.getInstance().showInfoMessage("Collection is empty");
+                GUIController.getInstance().showInfoMessage(new LocalizedMessage("emptyCollectionMessage"));
                 return;
             }
             ServerResponse response = new MinBySalaryCommand().execute();
@@ -133,7 +134,7 @@ public class CommandsDialog extends JDialog {
         public void actionPerformed(ActionEvent e) {
             try {
                 if (CollectionController.getInstance().getCollection().isEmpty()) {
-                    GUIController.getInstance().showInfoMessage("Collection is empty");
+                    GUIController.getInstance().showInfoMessage(new LocalizedMessage("emptyCollectionMessage"));
                     return;
                 }
 
@@ -144,7 +145,7 @@ public class CommandsDialog extends JDialog {
                 }
                 ServerResponse response = new FilterLessThanEndDateCommand(endDate).execute();
                 if (response.state() == ResultState.EXCEPTION) {
-                    GUIController.getInstance().showErrorMessage((Exception) response.data());
+                    GUIController.getInstance().showErrorMessage((LocalizedException) response.data());
                     return;
                 }
                 MainForm.getInstance().updateDataTable((Collection<Worker>) response.data());
@@ -177,7 +178,7 @@ public class CommandsDialog extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (CollectionController.getInstance().getCollection().isEmpty()) {
-                GUIController.getInstance().showInfoMessage("Collection is empty");
+                GUIController.getInstance().showInfoMessage(new LocalizedMessage("emptyCollectionMessage"));
                 return;
             }
 
@@ -191,7 +192,7 @@ public class CommandsDialog extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (CollectionController.getInstance().getCollection().isEmpty()) {
-                GUIController.getInstance().showInfoMessage("Collection is empty");
+                GUIController.getInstance().showInfoMessage(new LocalizedMessage("emptyCollectionMessage"));
                 return;
             }
 

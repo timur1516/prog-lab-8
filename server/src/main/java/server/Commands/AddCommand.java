@@ -3,6 +3,7 @@ package server.Commands;
 import common.Collection.Worker;
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
+import common.Exceptions.LocalizedMessage;
 import common.Exceptions.ServerErrorException;
 import common.net.requests.ServerResponse;
 import common.net.requests.ResultState;
@@ -55,6 +56,6 @@ public class AddCommand extends UserCommand {
             ServerLogger.getInstance().error("Database error occurred!", e);
             return new ServerResponse(ResultState.EXCEPTION, new ServerErrorException());
         }
-        return new ServerResponse(ResultState.SUCCESS, "Worker added successfully!");
+        return new ServerResponse(ResultState.SUCCESS, new LocalizedMessage("workerAddedMessage"));
     }
 }

@@ -2,6 +2,7 @@ package server.Commands;
 
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
+import common.Exceptions.LocalizedMessage;
 import common.net.requests.ServerResponse;
 import common.net.requests.ResultState;
 import server.Controllers.CollectionController;
@@ -36,7 +37,7 @@ public class FilterLessThanEndDateCommand extends UserCommand {
     @Override
     public ServerResponse execute() {
         if(CollectionController.getInstance().isEmpty()){
-            return new ServerResponse(ResultState.SUCCESS, "Collection is empty!");
+            return new ServerResponse(ResultState.SUCCESS, new LocalizedMessage("emptyCollectionMessage"));
         }
         return new ServerResponse(ResultState.SUCCESS,
                 (Serializable) CollectionController.getInstance().getLessThanEndDate(endDate));

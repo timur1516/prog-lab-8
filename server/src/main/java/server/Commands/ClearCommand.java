@@ -3,6 +3,7 @@ package server.Commands;
 import common.Commands.ICommand;
 import common.Commands.UserCommand;
 import common.Exceptions.InvalidDataException;
+import common.Exceptions.LocalizedMessage;
 import common.Exceptions.ServerErrorException;
 import common.Exceptions.WrongAmountOfArgumentsException;
 import common.net.requests.ServerResponse;
@@ -50,6 +51,6 @@ public class ClearCommand extends UserCommand {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return new ServerResponse(ResultState.SUCCESS, "Collection cleared successfully!");
+        return new ServerResponse(ResultState.SUCCESS, new LocalizedMessage("collectionClearedMessage"));
     }
 }

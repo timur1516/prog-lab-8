@@ -2,6 +2,7 @@ package client.GUI;
 
 import client.Controllers.AuthorizationController;
 import client.Controllers.LocaleController;
+import common.Exceptions.LocalizedException;
 import common.net.requests.ClientRequest;
 
 import javax.swing.*;
@@ -64,7 +65,7 @@ public class LogInForm {
             try {
                 ClientRequest.setUser(AuthorizationController.logIn(username, password));
                 GUIController.getInstance().setState(GUIStates.MAIN);
-            } catch (Exception ex) {
+            } catch (LocalizedException ex) {
                 GUIController.getInstance().showErrorMessage(ex);
             }
         }
