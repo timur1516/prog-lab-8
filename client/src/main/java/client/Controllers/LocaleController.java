@@ -2,7 +2,6 @@ package client.Controllers;
 
 import common.Controllers.PropertiesFilesController;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -22,12 +21,10 @@ public class LocaleController {
     private LocaleController() {
         locales = new ArrayList<>();
         localeNames = new ArrayList<>();
+        currentLocale = Locale.ENGLISH;
         try {
             loadLocales();
-            currentLocale = locales.get(0);
-        } catch (IOException e) {
-            currentLocale = Locale.ENGLISH;
-        }
+        } catch (IOException ignored) {}
 
     }
 
