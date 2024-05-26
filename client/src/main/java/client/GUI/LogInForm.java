@@ -2,6 +2,7 @@ package client.GUI;
 
 import client.Controllers.AuthorizationController;
 import client.Controllers.LocaleController;
+import client.Controllers.ResourceBundlesController;
 import common.Exceptions.LocalizedException;
 import common.net.requests.ClientRequest;
 
@@ -38,7 +39,7 @@ public class LogInForm {
     }
 
     private void updateLocale() {
-        ResourceBundle labels = ResourceBundle.getBundle("LogInGuiLabels", LocaleController.getInstance().getCurrentLocale());
+        ResourceBundle labels = ResourceBundlesController.getInstance().getLogInBundle();
         logInButton.setText(labels.getString("logInButton"));
         signUpLabel.setText(labels.getString("signUpLabel"));
         welcomeLabel.setText(labels.getString("welcomeLabel"));

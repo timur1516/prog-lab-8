@@ -1,6 +1,7 @@
 package client.Commands;
 
 import client.Constants;
+import client.Controllers.ResourceBundlesController;
 import client.Exceptions.ScriptFileReadingException;
 import common.Controllers.CommandsController;
 import common.Exceptions.*;
@@ -143,7 +144,12 @@ public class ExecuteScriptCommand extends UserCommand {
             ServerResponse response = command.execute();
             switch (response.state()){
                 case SUCCESS:
-                    Console.getInstance().printLn(response.data());
+                    if(response.data() instanceof LocalizedMessage le){
+                        Console.getInstance().printLn(le.getMessage(ResourceBundlesController.getInstance().getMessagesBundle()));
+                    }
+                    else {
+                        Console.getInstance().printLn(response.data());
+                    }
                     break;
                 case EXCEPTION:
                     throw (LocalizedException) response.data();

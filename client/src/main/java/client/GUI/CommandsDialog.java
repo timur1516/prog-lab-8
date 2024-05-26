@@ -3,6 +3,7 @@ package client.GUI;
 import client.Commands.*;
 import client.Controllers.CollectionController;
 import client.Controllers.LocaleController;
+import client.Controllers.ResourceBundlesController;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
 import client.Readers.CalendarReader;
@@ -67,7 +68,7 @@ public class CommandsDialog extends JDialog {
     }
 
     private void updateLocale() {
-        ResourceBundle labels = ResourceBundle.getBundle("MainGuiLabels", LocaleController.getInstance().getCurrentLocale());
+        ResourceBundle labels = ResourceBundlesController.getInstance().getMainBundle();
         headerLabel.setText(labels.getString("commandsHeaderLabel"));
         clearCommandButton.setText(labels.getString("clearCommandButton"));
         executeScriptCommandButton.setText(labels.getString("executeScriptCommandButton"));
@@ -159,7 +160,7 @@ public class CommandsDialog extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                long id = TextFieldReader.readValue(idTextField, "id", WorkerValidators.idValidator, WorkerParsers.longParser);
+                long id = TextFieldReader.readValue(idTextField, WorkerValidators.idValidator, WorkerParsers.longParser);
                 GUIController.getInstance().handleServerResponse(new RemoveByIdCommand(id).execute());
             } catch (InvalidDataException ex) {
                 GUIController.getInstance().showErrorMessage(ex);

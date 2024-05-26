@@ -109,7 +109,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="5aaad" class="javax.swing.JComboBox" binding="filterComboBox" custom-create="true">
+                  <component id="5aaad" class="javax.swing.JComboBox" binding="filterComboBox">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -170,7 +170,7 @@
                       <text value="Order by"/>
                     </properties>
                   </component>
-                  <component id="22d04" class="javax.swing.JComboBox" binding="sortComboBox" custom-create="true">
+                  <component id="22d04" class="javax.swing.JComboBox" binding="sortComboBox">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>

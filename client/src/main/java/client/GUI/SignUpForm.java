@@ -2,6 +2,7 @@ package client.GUI;
 
 import client.Controllers.AuthorizationController;
 import client.Controllers.LocaleController;
+import client.Controllers.ResourceBundlesController;
 import common.Exceptions.LocalizedException;
 import common.Exceptions.LocalizedMessage;
 
@@ -41,7 +42,7 @@ public class SignUpForm {
     }
 
     private void updateLocale() {
-        ResourceBundle labels = ResourceBundle.getBundle("SignUpGuiLabels", LocaleController.getInstance().getCurrentLocale());
+        ResourceBundle labels = ResourceBundlesController.getInstance().getSignUpBundle();
         signUpLabel.setText(labels.getString("signUpLabel"));
         usernameLabel.setText(labels.getString("usernameLabel"));
         passwordLabel.setText(labels.getString("passwordLabel"));

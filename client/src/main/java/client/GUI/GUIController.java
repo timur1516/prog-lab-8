@@ -1,6 +1,7 @@
 package client.GUI;
 
 import client.Controllers.LocaleController;
+import client.Controllers.ResourceBundlesController;
 import common.Exceptions.LocalizedException;
 import common.Exceptions.LocalizedMessage;
 import common.net.requests.ServerResponse;
@@ -48,26 +49,20 @@ public class GUIController {
     }
 
     public void showInfoMessage(LocalizedMessage message){
-        ResourceBundle labels = ResourceBundle.getBundle("Messages",
-                LocaleController.getInstance().getCurrentLocale());
         JOptionPane.showMessageDialog(mainFrame,
-                MessageFormat.format(labels.getString(message.getMessageKey()), message.getArguments()),
+                message.getMessage(ResourceBundlesController.getInstance().getMessagesBundle()),
                 "", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void showErrorMessage(LocalizedException e){
-        ResourceBundle labels = ResourceBundle.getBundle("Exceptions",
-                LocaleController.getInstance().getCurrentLocale());
         JOptionPane.showMessageDialog(mainFrame,
-                MessageFormat.format(labels.getString(e.getMessageKey()), e.getArguments()),
+                e.getMessage(ResourceBundlesController.getInstance().getExceptionsBundle()),
                 "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public void showWarningMessage(LocalizedMessage message){
-        ResourceBundle labels = ResourceBundle.getBundle("Messages",
-                LocaleController.getInstance().getCurrentLocale());
         JOptionPane.showMessageDialog(mainFrame,
-                MessageFormat.format(labels.getString(message.getMessageKey()), message.getArguments()),
+                message.getMessage(ResourceBundlesController.getInstance().getMessagesBundle()),
                 "Attention", JOptionPane.WARNING_MESSAGE);
     }
 

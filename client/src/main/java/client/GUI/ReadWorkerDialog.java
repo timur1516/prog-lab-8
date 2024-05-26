@@ -1,6 +1,7 @@
 package client.GUI;
 
 import client.Controllers.LocaleController;
+import client.Controllers.ResourceBundlesController;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
 import client.Readers.CalendarReader;
@@ -105,24 +106,25 @@ public class ReadWorkerDialog extends JDialog {
     }
 
     private void updateLocale() {
-        ResourceBundle labels = ResourceBundle.getBundle("MainGuiLabels", LocaleController.getInstance().getCurrentLocale());
-         headerLabel.setText(labels.getString("workerFormHeaderLabel"));
-         saveButton.setText(labels.getString("saveButton"));
-         cancelButton.setText(labels.getString("cancelButton"));
-         nameLabel.setText(labels.getString("nameLabel") + ":");
-         salaryLabel.setText(labels.getString("salaryLabel") + ":");
-         startDateLabel.setText(labels.getString("startDateLabel") + ":");
-         endDateLabel.setText(labels.getString("endDateLabel") + ":");
-         statusLabel.setText(labels.getString("statusLabel") + ":");
-         heightLabel.setText(labels.getString("heightLabel") + ":");
-         eyeColorLabel.setText(labels.getString("eyeColorLabel") + ":");
-         nationalityLabel.setText(labels.getString("nationalityLabel") + ":");
-         mainInfoLabel.setText(labels.getString("mainInfoLabel"));
-         coordinatesLabel.setText(labels.getString("coordinatesLabel"));
-         xLabel.setText(labels.getString("xLabel") + ":");
-         yLabel.setText(labels.getString("yLabel") + ":");
-         personLabel.setText(labels.getString("personLabel"));
-         noPersonCheckBox.setText(labels.getString("noPersonCheckBox"));
+        ResourceBundle labels = ResourceBundlesController.getInstance().getMainBundle();
+        ResourceBundle fields = ResourceBundlesController.getInstance().getFieldsBundle();
+        headerLabel.setText(labels.getString("workerFormHeaderLabel"));
+        saveButton.setText(labels.getString("saveButton"));
+        cancelButton.setText(labels.getString("cancelButton"));
+        nameLabel.setText(fields.getString("name") + ":");
+        salaryLabel.setText(fields.getString("salary") + ":");
+        startDateLabel.setText(fields.getString("startDate") + ":");
+        endDateLabel.setText(fields.getString("endDate") + ":");
+        statusLabel.setText(fields.getString("status") + ":");
+        heightLabel.setText(fields.getString("height") + ":");
+        eyeColorLabel.setText(fields.getString("eyeColor") + ":");
+        nationalityLabel.setText(fields.getString("nationality") + ":");
+        mainInfoLabel.setText(labels.getString("mainInfoLabel"));
+        coordinatesLabel.setText(labels.getString("coordinatesLabel"));
+        xLabel.setText(fields.getString("x") + ":");
+        yLabel.setText(fields.getString("y") + ":");
+        personLabel.setText(labels.getString("personLabel"));
+        noPersonCheckBox.setText(labels.getString("noPersonCheckBox"));
     }
 
     public void fillFields(Worker worker) {
@@ -178,23 +180,23 @@ public class ReadWorkerDialog extends JDialog {
     }
 
     private Worker readWorker() throws InvalidDataException {
-        String name = TextFieldReader.readValue(nameTextField, "name",
+        String name = TextFieldReader.readValue(nameTextField, 
                 WorkerValidators.nameValidator, WorkerParsers.stringParser);
 
-        Integer salary = TextFieldReader.readValue(salaryTextField, "salary",
+        Integer salary = TextFieldReader.readValue(salaryTextField, 
                 WorkerValidators.salaryValidator, WorkerParsers.integerParser);
 
         LocalDateTime startDate = CalendarReader.readValue(startDateCalendar, WorkerValidators.startDateValidator);
 
         LocalDateTime endDate = CalendarReader.readValue(endDateCalendar, WorkerValidators.endDateValidator);
 
-        Status status = ComboBoxReader.readValue(statusComboBox, "status",
+        Status status = ComboBoxReader.readValue(statusComboBox, 
                 WorkerValidators.statusValidator, WorkerParsers.statusParser);
 
-        double x = TextFieldReader.readValue(xTextField, "x",
+        double x = TextFieldReader.readValue(xTextField, 
                 WorkerValidators.xValidator, WorkerParsers.doubleParser);
 
-        double y = TextFieldReader.readValue(yTextField, "y",
+        double y = TextFieldReader.readValue(yTextField, 
                 WorkerValidators.yValidator, WorkerParsers.doubleParser);
 
         Coordinates coordinates = new Coordinates(x, y);
@@ -202,13 +204,13 @@ public class ReadWorkerDialog extends JDialog {
         Person person = null;
 
         if (!noPersonCheckBox.isSelected()) {
-            Long height = TextFieldReader.readValue(heightTextField, "height",
+            Long height = TextFieldReader.readValue(heightTextField, 
                     WorkerValidators.heightValidator, WorkerParsers.longParser);
 
-            Color eyeColor = ComboBoxReader.readValue(eyeColorComboBox, "eye color",
+            Color eyeColor = ComboBoxReader.readValue(eyeColorComboBox, 
                     WorkerValidators.eyeColorValidator, WorkerParsers.eyeColorParser);
 
-            Country nationality = ComboBoxReader.readValue(nationalityComboBox, "nationality",
+            Country nationality = ComboBoxReader.readValue(nationalityComboBox, 
                     WorkerValidators.nationalityValidator, WorkerParsers.nationalityParser);
 
             person = new Person(height, eyeColor, nationality);
@@ -524,6 +526,14 @@ public class ReadWorkerDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(20, 10, 10, 10);
         menuPanel.add(cancelButton, gbc);
+        nameLabel.setLabelFor(nameTextField);
+        salaryLabel.setLabelFor(salaryTextField);
+        statusLabel.setLabelFor(statusComboBox);
+        heightLabel.setLabelFor(heightTextField);
+        eyeColorLabel.setLabelFor(eyeColorComboBox);
+        nationalityLabel.setLabelFor(nationalityComboBox);
+        xLabel.setLabelFor(xTextField);
+        yLabel.setLabelFor(yTextField);
     }
 
     /**

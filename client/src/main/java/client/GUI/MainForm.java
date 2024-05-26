@@ -5,6 +5,7 @@ import client.Commands.UpdateByIdCommand;
 import client.Controllers.CollectionController;
 import client.Commands.AddCommand;
 import client.Controllers.LocaleController;
+import client.Controllers.ResourceBundlesController;
 import client.GUI.visualization.VisualizationFrom;
 import common.Collection.Worker;
 import common.Exceptions.AccessDeniedException;
@@ -73,7 +74,7 @@ public class MainForm {
     private MainForm() {
         $$$setupUI$$$();
         updateLocale();
-        
+
         usernameLabel.setText(ClientRequest.getUser().userName());
 
         createButton.addActionListener(new CreateButtonActionListener());
@@ -103,7 +104,7 @@ public class MainForm {
     }
 
     private void updateLocale() {
-        ResourceBundle labels = ResourceBundle.getBundle("MainGuiLabels", LocaleController.getInstance().getCurrentLocale());
+        ResourceBundle labels = ResourceBundlesController.getInstance().getMainBundle();
         createButton.setText(labels.getString("createButton"));
         editButton.setText(labels.getString("editButton"));
         deleteButton.setText(labels.getString("deleteButton"));
@@ -114,6 +115,24 @@ public class MainForm {
         filterByLabel.setText(labels.getString("filterByLabel") + ":");
         sortLabel.setText(labels.getString("sortLabel") + ":");
         localeLabel.setText(labels.getString("localeLabel") + ":");
+
+        ResourceBundle fields = ResourceBundlesController.getInstance().getFieldsBundle();
+        DefaultTableModel tableModel = new DefaultTableModel();
+        dataTableColumns.stream().map(fields::getString).forEach(tableModel::addColumn);
+        dataTable.setModel(tableModel);
+        updateDataTable(CollectionController.getInstance().getProcessedCollection());
+
+        int selectedItemIndex = filterComboBox.getSelectedIndex();
+        filterComboBox.removeAllItems();
+        filterComboBox.addItem("");
+        dataTableColumns.stream().map(fields::getString).forEach(filterComboBox::addItem);
+        filterComboBox.setSelectedIndex(selectedItemIndex);
+
+        selectedItemIndex = sortComboBox.getSelectedIndex();
+        sortComboBox.removeAllItems();
+        sortComboBox.addItem("");
+        dataTableColumns.stream().map(fields::getString).forEach(sortComboBox::addItem);
+        sortComboBox.setSelectedIndex(selectedItemIndex);
     }
 
     private class LocaleComboBoxListener implements ActionListener {
@@ -123,7 +142,7 @@ public class MainForm {
             updateLocale();
         }
     }
-    
+
     private class CreateButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -137,8 +156,9 @@ public class MainForm {
     private class FilterActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String filterByField = (String) filterComboBox.getSelectedItem();
-            if (filterByField == null) return;
+            int selectedIndex = filterComboBox.getSelectedIndex();
+            if (selectedIndex < 0) return;
+            String filterByField = selectedIndex > 0 ? dataTableColumns.get(selectedIndex - 1) : "";
             String value = filterTextField.getText().trim();
             CollectionController.getInstance().setFilter(filterByField, value);
             updateDataTable(CollectionController.getInstance().getProcessedCollection());
@@ -148,8 +168,9 @@ public class MainForm {
     private class SortActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String orderByField = (String) sortComboBox.getSelectedItem();
-            if (orderByField == null) return;
+            int selectedIndex = sortComboBox.getSelectedIndex();
+            if (selectedIndex < 0) return;
+            String orderByField = selectedIndex > 0 ? dataTableColumns.get(selectedIndex - 1) : "";
             CollectionController.getInstance().setComparator(orderByField);
             updateDataTable(CollectionController.getInstance().getProcessedCollection());
         }
@@ -324,6 +345,7 @@ public class MainForm {
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.VERTICAL;
         mainMenuPanel.add(filterPanel, gbc);
+        filterComboBox = new JComboBox();
         Font filterComboBoxFont = this.$$$getFont$$$(null, Font.PLAIN, 16, filterComboBox.getFont());
         if (filterComboBoxFont != null) filterComboBox.setFont(filterComboBoxFont);
         gbc = new GridBagConstraints();
@@ -381,6 +403,7 @@ public class MainForm {
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(0, 0, 0, 10);
         sortPanel.add(sortLabel, gbc);
+        sortComboBox = new JComboBox();
         Font sortComboBoxFont = this.$$$getFont$$$(null, Font.PLAIN, 16, sortComboBox.getFont());
         if (sortComboBoxFont != null) sortComboBox.setFont(sortComboBoxFont);
         gbc = new GridBagConstraints();
@@ -536,14 +559,6 @@ public class MainForm {
         };
         dataTable.getTableHeader().setReorderingAllowed(false);
         dataTable.getTableHeader().setFont(this.$$$getFont$$$(null, Font.PLAIN, 16, dataTable.getTableHeader().getFont()));
-
-        filterComboBox = new JComboBox();
-        filterComboBox.addItem("");
-        dataTableColumns.forEach(filterComboBox::addItem);
-
-        sortComboBox = new JComboBox();
-        sortComboBox.addItem("");
-        dataTableColumns.forEach(sortComboBox::addItem);
 
         localeComboBox = new JComboBox<String>();
         LocaleController.getInstance().getLocaleNames().forEach(localeComboBox::addItem);

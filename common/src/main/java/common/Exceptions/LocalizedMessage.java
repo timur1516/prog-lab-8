@@ -1,6 +1,8 @@
 package common.Exceptions;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 public class LocalizedMessage implements Serializable {
     private final String messageKey;
@@ -11,10 +13,7 @@ public class LocalizedMessage implements Serializable {
         this.arguments = arguments;
     }
 
-    public String getMessageKey(){
-        return this.messageKey;
-    }
-    public Object[] getArguments(){
-        return this.arguments;
+    public String getMessage(ResourceBundle bundle){
+        return MessageFormat.format(bundle.getString(messageKey), arguments);
     }
 }

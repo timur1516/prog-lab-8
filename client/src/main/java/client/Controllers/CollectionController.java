@@ -23,7 +23,8 @@ public class CollectionController {
     }
     private CollectionController(){
         filter = o -> true;
-        comparator = (o1, o2) -> 0;
+        comparator = Comparator.comparing(Worker::getName);
+        collection = new ArrayList<>();
     };
 
     public boolean updateCollection() throws Exception {
@@ -85,7 +86,7 @@ public class CollectionController {
     public void setComparator(String fieldName){
         comparator = switch (fieldName){
             case "id" -> Comparator.comparingLong(Worker::getId);
-            case "name" -> Comparator.comparing(Worker::getName);
+            case "name", "" -> Comparator.comparing(Worker::getName);
             case "x" -> Comparator.comparingDouble(worker -> worker.getCoordinates().getX());
             case "y" -> Comparator.comparingDouble(worker -> worker.getCoordinates().getY());
             case "creationDate" -> Comparator.comparing(Worker::getCreationDate);
@@ -96,7 +97,6 @@ public class CollectionController {
             case "height" -> Comparator.comparing(worker -> worker.getPerson() == null ? null : worker.getPerson().getHeight(), Comparator.nullsLast(Comparator.naturalOrder()));
             case "eyeColor" -> Comparator.comparing(worker -> worker.getPerson() == null ? null : worker.getPerson().getEyeColor(), Comparator.nullsLast(Comparator.naturalOrder()));
             case "nationality" -> Comparator.comparing(worker -> worker.getPerson() == null ? null : worker.getPerson().getNationality(), Comparator.nullsLast(Comparator.naturalOrder()));
-            case "" -> (o1, o2) -> 0;
             default -> comparator;
         };
     }

@@ -9,7 +9,7 @@ public class CollectionUpdaterTask extends Thread{
     public void run() {
         while(!Thread.currentThread().isInterrupted()) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
@@ -19,10 +19,7 @@ public class CollectionUpdaterTask extends Thread{
                 if(CollectionController.getInstance().updateCollection()){
                     MainForm.getInstance().updateDataTable(CollectionController.getInstance().getProcessedCollection());
                 }
-            } catch (Exception e) {
-                //TODO add full lock reaction to unavailable server
-                throw new RuntimeException(e);
-            }
+            } catch (Exception ignored) {}
         }
     }
 }
