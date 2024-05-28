@@ -29,7 +29,7 @@ public class LocaleController {
     }
 
     private void loadLocales() throws IOException {
-        Properties properties = new PropertiesFilesController().readProperties("locales.properties");
+        Properties properties = new PropertiesFilesController().readResource("locales.properties");
         properties.forEach((key, value) -> {
             locales.add(new Locale((String) key));
             localeNames.add((String) value);

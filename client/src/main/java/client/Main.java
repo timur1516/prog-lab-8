@@ -6,11 +6,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
 
-import client.Commands.*;
 import client.GUI.GUIController;
 import client.net.UDPClient;
-import common.Controllers.CommandsController;
-import client.Readers.WorkerReader;
 import common.Controllers.PropertiesFilesController;
 import common.Exceptions.LocalizedException;
 import common.Exceptions.LocalizedMessage;
@@ -24,6 +21,9 @@ import javax.swing.*;
  * <p>In the beginning starts udp client, then calls interactiveMode method
  */
 public class Main {
+    private static int serverPort;
+    private static InetAddress serverHost;
+
     /**
      * Main method of program
      * <p>Init all controllers, starts udp client, and start handling user commands
@@ -31,21 +31,18 @@ public class Main {
      */
     public static void main(String[] args) {
         Console.getInstance().setScanner(new Scanner(System.in));
-
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
         GUIController.getInstance();
 
         new CollectionUpdaterTask().start();
 
-        int serverPort = Constants.DEFAULT_PORT_NUMBER;
         try {
-            serverPort = readServerPort();
-            GUIController.getInstance().showInfoMessage(new LocalizedMessage("serverPortMessage", serverPort));
-        } catch (IOException | NumberFormatException e) {
-            GUIController.getInstance().showWarningMessage(new LocalizedMessage("portConfigMessage", serverPort));
-        }
-
-        try {
-            UDPClient.getInstance().init(InetAddress.getLocalHost(), serverPort, Constants.CLIENT_TIMEOUT);
+            serverPort = Constants.DEFAULT_PORT_NUMBER;
+            serverHost = InetAddress.getLocalHost();
+            readServerData();
+            UDPClient.getInstance().init(serverHost, serverPort, Constants.CLIENT_TIMEOUT);
             UDPClient.getInstance().open();
         } catch (UnknownHostException e) {
             GUIController.getInstance().showErrorMessage(new LocalizedException("serverHostNotFound"));
@@ -56,14 +53,15 @@ public class Main {
         }
     }
 
-    /**
-     * Method to read server port from properties config file
-     * @return Integer server port
-     * @throws IOException If any I\O error occurred
-     * @throws NumberFormatException If port number unparsable for Integer
-     */
-    private static int readServerPort() throws IOException, NumberFormatException {
-        Properties configProperties = new PropertiesFilesController().readProperties("config.properties");
-        return Integer.parseInt(configProperties.getProperty("port"));
+    private static void readServerData() {
+        try {
+            Properties configProperties = new PropertiesFilesController().readResource("config.properties");
+            serverPort = Integer.parseInt(configProperties.getProperty("port"));
+            serverHost = InetAddress.getByName(configProperties.getProperty("host"));
+            GUIController.getInstance().showInfoMessage(new LocalizedMessage("serverPortMessage", serverPort));
+        } catch (IOException | NumberFormatException e) {
+            GUIController.getInstance().showWarningMessage(new LocalizedMessage("portConfigMessage", serverPort));
+        }
+
     }
 }

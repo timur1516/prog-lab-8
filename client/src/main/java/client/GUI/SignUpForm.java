@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -32,6 +33,8 @@ public class SignUpForm {
     private JComboBox localeComboBox;
     private JLabel localeLabel;
     private JLabel backToLogInLabel;
+    private JPanel leftPanel;
+    private JPanel rightPanel;
 
     public SignUpForm() {
         $$$setupUI$$$();
@@ -102,9 +105,9 @@ public class SignUpForm {
         createUIComponents();
         signUpRootPanel = new JPanel();
         signUpRootPanel.setLayout(new GridBagLayout());
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new BorderLayout(0, 0));
-        panel1.setMinimumSize(new Dimension(157, 282));
+        leftPanel = new JPanel();
+        leftPanel.setLayout(new BorderLayout(0, 0));
+        leftPanel.setMinimumSize(new Dimension(157, 282));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -112,10 +115,10 @@ public class SignUpForm {
         gbc.weightx = 0.5;
         gbc.weighty = 0.5;
         gbc.fill = GridBagConstraints.BOTH;
-        signUpRootPanel.add(panel1, gbc);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridBagLayout());
-        panel1.add(panel2, BorderLayout.NORTH);
+        signUpRootPanel.add(leftPanel, gbc);
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridBagLayout());
+        leftPanel.add(panel1, BorderLayout.NORTH);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -123,7 +126,7 @@ public class SignUpForm {
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(10, 10, 0, 0);
-        panel2.add(localeComboBox, gbc);
+        panel1.add(localeComboBox, gbc);
         localeLabel = new JLabel();
         Font localeLabelFont = this.$$$getFont$$$(null, Font.PLAIN, 16, localeLabel.getFont());
         if (localeLabelFont != null) localeLabel.setFont(localeLabelFont);
@@ -133,17 +136,17 @@ public class SignUpForm {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(10, 10, 0, 0);
-        panel2.add(localeLabel, gbc);
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridBagLayout());
-        panel1.add(panel3, BorderLayout.CENTER);
+        panel1.add(localeLabel, gbc);
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridBagLayout());
+        leftPanel.add(panel2, BorderLayout.CENTER);
         signUpPanel = new JPanel();
         signUpPanel.setLayout(new GridBagLayout());
         signUpPanel.setMinimumSize(new Dimension(252, 282));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel3.add(signUpPanel, gbc);
+        panel2.add(signUpPanel, gbc);
         signUpLabel = new JLabel();
         Font signUpLabelFont = this.$$$getFont$$$(null, Font.PLAIN, 16, signUpLabel.getFont());
         if (signUpLabelFont != null) signUpLabel.setFont(signUpLabelFont);
@@ -260,16 +263,16 @@ public class SignUpForm {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         signUpPanel.add(backToLogInLabel, gbc);
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridBagLayout());
-        panel4.setBackground(new Color(-11961296));
+        rightPanel = new JPanel();
+        rightPanel.setLayout(new GridBagLayout());
+        rightPanel.setBackground(new Color(-11961296));
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 0.5;
         gbc.weighty = 0.5;
         gbc.fill = GridBagConstraints.BOTH;
-        signUpRootPanel.add(panel4, gbc);
+        signUpRootPanel.add(rightPanel, gbc);
     }
 
     /**
