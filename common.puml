@@ -1,0 +1,362 @@
+@startuml
+class common.Exceptions.authorization.EmptyUsernameException {
++ <<Create>> EmptyUsernameException()
+}
+
+class common.Controllers.PropertiesFilesController {
++ Properties readProperties(String)
++ Properties readResource(String)
++ void writeProperties(Properties,String,String)
+}
+
+class common.Exceptions.authorization.DifferentPasswordsException {
++ <<Create>> DifferentPasswordsException()
+}
+
+class common.Exceptions.InvalidDataException {
++ <<Create>> InvalidDataException(String,Object)
+}
+
+class common.Exceptions.LocalizedException {
+- String messageKey
+- Object[] arguments
++ <<Create>> LocalizedException(String,Object)
++ String getMessage(ResourceBundle)
+}
+
+
+enum common.net.requests.ResultState {
++  SUCCESS
++  EXCEPTION
+}
+
+class common.Exceptions.AccessDeniedException {
++ <<Create>> AccessDeniedException(String)
+}
+
+class common.Exceptions.SendingDataException {
++ <<Create>> SendingDataException()
+}
+
+abstract class common.Commands.UserCommand {
+- String name
+- String[] argumentsDescription
+- int amountOfArguments
+- String description
++ <<Create>> UserCommand(String,String,String)
+- void countArgs()
++ String getName()
++ void initCommandArgs(ArrayList<Serializable>)
++ void readData()
++ String toString()
++ boolean equals(Object)
++ int hashCode()
+}
+
+
+class common.Exceptions.LocalizedMessage {
+- String messageKey
+- Object[] arguments
++ <<Create>> LocalizedMessage(String,Object)
++ String getMessage(ResourceBundle)
+}
+
+
+class common.utils.CommonConstants {
++ {static} int PACKET_SIZE
++ {static} String DATE_FORMAT_STRING
++ {static} String TIME_FROMAT_STRING
++ {static} DateTimeFormatter formatter
+}
+
+class common.Exceptions.ConfigurationFileIOException {
++ <<Create>> ConfigurationFileIOException()
+}
+
+class common.UI.YesNoQuestionAsker {
+~ String question
++ <<Create>> YesNoQuestionAsker(String)
++ boolean ask()
+}
+
+
+class common.utils.FileLoader {
++ <<Create>> FileLoader()
++ File loadFile(String,String,String,String)
+}
+
+enum common.Collection.Country {
++  UNITED_KINGDOM
++  USA
++  VATICAN
+}
+
+class common.UI.CommandReader {
+- {static} CommandReader COMMAND_READER
+- <<Create>> CommandReader()
++ {static} CommandReader getInstance()
++ PackedCommand readCommand()
+}
+
+
+enum common.Collection.Status {
++  FIRED
++  HIRED
++  REGULAR
++  PROBATION
+}
+
+class common.Controllers.CommandsController {
+- ArrayList<UserCommand> commandsList
++ void setCommandsList(ArrayList<UserCommand>)
++ ArrayList<UserCommand> getCommandsList()
++ UserCommand launchCommand(PackedCommand)
++ CommandsController clone()
+}
+
+
+class common.UI.Console {
+- {static} Console CONSOLE
+- Scanner scanner
+- <<Create>> Console()
++ {static} Console getInstance()
++ void setScanner(Scanner)
++ Scanner getScanner()
++ String readLine()
++ boolean hasNextLine()
++ void print(Object)
++ void printLn(Object)
++ void printError(String)
+}
+
+
+class common.Collection.Person {
+- Long height
+- Color eyeColor
+- Country nationality
++ <<Create>> Person(Long,Color,Country)
++ String toString()
++ Long getHeight()
++ Color getEyeColor()
++ Country getNationality()
++ boolean equals(Object)
++ int hashCode()
+}
+
+
+class common.Collection.Coordinates {
+- double x
+- double y
++ <<Create>> Coordinates(double,double)
++ String toString()
++ double getX()
++ double getY()
++ int compareTo(Coordinates)
++ boolean equals(Object)
++ int hashCode()
+}
+
+
+enum common.net.requests.ClientRequestType {
++  EXECUTE_COMMAND
++  SIGN_IN
++  LOG_IN
++  CHECK_USERNAME
+}
+
+class common.Exceptions.authorization.UsernameNotFoundException {
++ <<Create>> UsernameNotFoundException(String)
+}
+
+class common.net.requests.ClientRequest {
+- ClientRequestType requestType
+- Serializable data
+- UserInfo user
+- {static} UserInfo globalUser
++ <<Create>> ClientRequest(ClientRequestType,Serializable)
++ {static} void setUser(UserInfo)
++ {static} UserInfo getUser()
++ ClientRequestType getRequestType()
++ Serializable data()
++ UserInfo user()
+}
+
+
+class common.Commands.HelpCommand {
+- CommandsController commandsController
++ <<Create>> HelpCommand(CommandsController)
++ ServerResponse execute()
+}
+
+
+class common.Exceptions.ServerErrorException {
++ <<Create>> ServerErrorException()
+}
+
+interface common.Commands.ICommand {
+~ String getName()
+~ ServerResponse execute()
+}
+
+class common.Exceptions.WrongAmountOfArgumentsException {
++ <<Create>> WrongAmountOfArgumentsException(String,int,int)
+}
+
+class common.Validators.WorkerValidators {
++ {static} Validator<Worker> workerValidator
++ {static} Validator<Long> idValidator
++ {static} Validator<String> nameValidator
++ {static} Validator<Coordinates> coordinatesValidator
++ {static} Validator<Double> xValidator
++ {static} Validator<Double> yValidator
++ {static} Validator<LocalDateTime> startDateValidator
++ {static} Validator<LocalDateTime> endDateValidator
++ {static} Validator<ZonedDateTime> creationDateValidator
++ {static} Validator<Integer> salaryValidator
++ {static} Validator<Status> statusValidator
++ {static} Validator<Person> personValidator
++ {static} Validator<Long> heightValidator
++ {static} Validator<Color> eyeColorValidator
++ {static} Validator<Country> nationalityValidator
+}
+
+class common.Exceptions.authorization.UsernameAlreadyExistsException {
++ <<Create>> UsernameAlreadyExistsException(String)
+}
+
+class common.Exceptions.WrongFilePermissionsException {
++ <<Create>> WrongFilePermissionsException(String,Object)
+}
+
+class common.Exceptions.authorization.WrongPasswordException {
++ <<Create>> WrongPasswordException()
+}
+
+class common.net.dataTransfer.PackedCommand {
+- String commandName
+- ArrayList<Serializable> arguments
++ <<Create>> PackedCommand(String,ArrayList<Serializable>)
++ ArrayList<Serializable> arguments()
++ String commandName()
+}
+
+
+class common.Exceptions.ElementNotFoundException {
++ <<Create>> ElementNotFoundException()
+}
+
+interface common.Validators.Validator {
+~ void validate(T)
+}
+
+class common.Exceptions.ReceivingDataException {
++ <<Create>> ReceivingDataException(String,Object)
+}
+
+class common.Collection.Worker {
+- long id
+- String name
+- Coordinates coordinates
+- java.time.ZonedDateTime creationDate
+- Integer salary
+- java.time.LocalDateTime startDate
+- java.time.LocalDateTime endDate
+- Status status
+- Person person
+- String username
++ <<Create>> Worker(long,String,Coordinates,ZonedDateTime,Integer,LocalDateTime,LocalDateTime,Status,Person,String)
++ long getId()
++ void setId(long)
++ Integer getSalary()
++ LocalDateTime getEndDate()
++ String getName()
++ Coordinates getCoordinates()
++ ZonedDateTime getCreationDate()
++ LocalDateTime getStartDate()
++ Status getStatus()
++ Person getPerson()
++ String getUsername()
++ int compareTo(Worker)
++ String toString()
++ LinkedHashMap<String,String> getAsStringMap()
++ boolean equals(Object)
++ int hashCode()
+}
+
+
+class common.Exceptions.authorization.AuthorizationException {
++ <<Create>> AuthorizationException(String,Object)
+}
+
+class common.utils.Serializer {
++ {static} byte[] serialize(Serializable)
++ {static} Serializable deserialize(byte[])
+}
+
+class common.utils.PasswordHasher {
++ String get_SHA_512_SecurePassword(String)
+}
+
+class common.utils.RandomStringGenerator {
+- SecureRandom randomizer
++ <<Create>> RandomStringGenerator()
++ String generate()
++ String generate(Integer)
+}
+
+
+class common.net.dataTransfer.UserInfo {
+- String userName
+- String password
++ <<Create>> UserInfo(String,String)
++ String password()
++ String userName()
+}
+
+
+class common.net.requests.ServerResponse {
+- ResultState state
+- Serializable data
++ <<Create>> ServerResponse(ResultState,Serializable)
++ ResultState state()
++ Serializable data()
+}
+
+
+enum common.Collection.Color {
++  RED
++  BLUE
++  YELLOW
++  BROWN
+}
+
+
+
+common.Exceptions.authorization.AuthorizationException <|-- common.Exceptions.authorization.EmptyUsernameException
+common.Exceptions.authorization.AuthorizationException <|-- common.Exceptions.authorization.DifferentPasswordsException
+common.Exceptions.LocalizedException <|-- common.Exceptions.InvalidDataException
+java.io.Serializable <|.. common.Exceptions.LocalizedException
+common.Exceptions.Exception <|-- common.Exceptions.LocalizedException
+common.Exceptions.LocalizedException <|-- common.Exceptions.AccessDeniedException
+common.Exceptions.LocalizedException <|-- common.Exceptions.SendingDataException
+common.Commands.ICommand <|.. common.Commands.UserCommand
+java.io.Serializable <|.. common.Exceptions.LocalizedMessage
+common.Exceptions.LocalizedException <|-- common.Exceptions.ConfigurationFileIOException
+common.Controllers.Cloneable <|.. common.Controllers.CommandsController
+java.io.Serializable <|.. common.Collection.Person
+common.Collection.Comparable <|.. common.Collection.Coordinates
+java.io.Serializable <|.. common.Collection.Coordinates
+common.Exceptions.authorization.AuthorizationException <|-- common.Exceptions.authorization.UsernameNotFoundException
+java.io.Serializable <|.. common.net.requests.ClientRequest
+common.Commands.UserCommand <|-- common.Commands.HelpCommand
+common.Exceptions.LocalizedException <|-- common.Exceptions.ServerErrorException
+common.Exceptions.LocalizedException <|-- common.Exceptions.WrongAmountOfArgumentsException
+common.Exceptions.authorization.AuthorizationException <|-- common.Exceptions.authorization.UsernameAlreadyExistsException
+common.Exceptions.LocalizedException <|-- common.Exceptions.WrongFilePermissionsException
+common.Exceptions.authorization.AuthorizationException <|-- common.Exceptions.authorization.WrongPasswordException
+common.Exceptions.LocalizedException <|-- common.Exceptions.ElementNotFoundException
+common.Exceptions.LocalizedException <|-- common.Exceptions.ReceivingDataException
+common.Collection.Comparable <|.. common.Collection.Worker
+java.io.Serializable <|.. common.Collection.Worker
+common.Exceptions.LocalizedException <|-- common.Exceptions.authorization.AuthorizationException
+@enduml

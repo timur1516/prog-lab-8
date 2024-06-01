@@ -26,6 +26,11 @@ public class RemoveGreaterCommand extends ClientCommand {
     public RemoveGreaterCommand() {
         super("remove_greater", "remove all elements which are greater than given", "{element}");
     }
+
+    /**
+     * RemoveGreaterCommand constructor with arguments
+     * @param worker
+     */
     public RemoveGreaterCommand(Worker worker) {
         super("remove_greater", "remove all elements which are greater than given", "{element}");
         this.worker = worker;

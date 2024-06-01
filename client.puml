@@ -1,0 +1,691 @@
+@startuml
+abstract class client.Readers.ValueReader {
++ T readValue(String,Validator<T>,Parser<T>)
+}
+
+class client.Exceptions.ScriptFileReadingException {
++ <<Create>> ScriptFileReadingException()
+}
+
+class client.Exceptions.RecursiveScriptException {
++ <<Create>> RecursiveScriptException()
+}
+
+class client.Readers.ComboBoxReader {
++ {static} T readValue(JComboBox<String>,Validator<T>,Parser<T>)
+}
+
+class client.Commands.ShowCommand {
++ <<Create>> ShowCommand()
++ ServerResponse execute()
+}
+
+class client.CollectionUpdaterTask {
++ void run()
+}
+
+class client.Readers.CalendarReader {
++ {static} LocalDateTime readValue(Calendar,Validator<LocalDateTime>)
+}
+
+class client.Controllers.LocaleController {
+- {static} LocaleController LOCALE_CONTROLLER
+- List<String> localeNames
+- List<Locale> locales
+- Locale currentLocale
+- <<Create>> LocaleController()
++ {static} LocaleController getInstance()
+- void loadLocales()
++ List<String> getLocaleNames()
++ Locale getCurrentLocale()
++ int getCurrentLocaleNumber()
++ void setLocale(int)
+}
+
+
+class client.GUI.calendar.Calendar {
+- {static} Properties p
++ <<Create>> Calendar()
+}
+
+
+class client.Controllers.CollectionController {
+- Collection<Worker> collection
+- Predicate<Worker> filter
+- Comparator<Worker> comparator
+- {static} CollectionController COLLECTION_CONTROLLER
+- <<Create>> CollectionController()
++ {static} CollectionController getInstance()
++ boolean updateCollection()
++ Collection<Worker> getProcessedCollection()
++ Collection<Worker> getCollection()
++ void setFilter(String,String)
++ void setComparator(String)
+}
+
+
+class client.GUI.visualization.WorkerImage {
+- {static} int WORKER_RADIUS
+- {static} int HEAD_RADIUS
+- {static} int BODY_RADIUS
+- {static} Color WORKER_COLOR
+- {static} int MAX_HEAD_HEIGHT
+- {static} int MIN_HEAD_HEIGHT
+- {static} int ANIMATION_PERIOD
+- {static} double MAX_SCALE
+- {static} double MIN_SCALE
+- int headHeight
+- int animationInc
+- Color backgroundColor
+- Worker worker
+- double scale
++ <<Create>> WorkerImage(Worker,Color,double)
+- void init()
+- void change()
+# void paintComponent(Graphics)
+}
+
+
+class client.Readers.WorkerReader {
+- {static} WorkerReader WORKER_READER
++ {static} WorkerReader getInstance()
++ Worker readWorker()
++ String readName()
++ Coordinates readCoordinates()
++ double readX()
++ double readY()
++ Integer readSalary()
++ LocalDateTime readStartDate()
++ LocalDateTime readEndDate()
++ Status readStatus()
++ Person readPerson()
++ Long readHeight()
++ Color readEyeColor()
++ Country readNationality()
+}
+
+
+class client.Readers.TextFieldReader {
++ {static} T readValue(JTextField,Validator<T>,Parser<T>)
+}
+
+class client.Main {
+- {static} int serverPort
+- {static} InetAddress serverHost
++ {static} void main(String[])
+- {static} void readServerData()
+}
+
+
+class client.Parsers.WorkerParsers {
++ {static} Parser<String> stringParser
++ {static} Parser<Long> longParser
++ {static} Parser<Integer> integerParser
++ {static} Parser<Double> doubleParser
++ {static} Parser<LocalDateTime> localDateTimeParser
++ {static} Parser<Status> statusParser
++ {static} Parser<Color> eyeColorParser
++ {static} Parser<Country> nationalityParser
+}
+
+class client.Commands.ClearCommand {
++ <<Create>> ClearCommand()
++ ServerResponse execute()
+}
+
+class client.GUI.visualization.VisualizationFrom {
+- {static} int WINDOW_WIDTH
+- {static} int WINDOW_HEIGHT
+- JPanel contentPane
+- CoordinatesNet coordinatesNet
++ <<Create>> VisualizationFrom()
++ void update()
+- void setUpUI()
+}
+
+
+class client.Controllers.AuthorizationController {
+- {static} void handleAuthorizationResult(ServerResponse)
++ {static} UserInfo logIn(String,String)
++ {static} void singUp(String,String,String)
+}
+
+class client.GUI.visualization.CoordinatesNet {
+- {static} int LEFT_OFFSET
+- {static} int TOP_OFFSET
+- {static} int BOTTOM_OFFSET
+- {static} int RIGHT_OFFSET
+- {static} int CELL_SIZE
+- {static} int X_TEXT_OFFSET
+- {static} int Y_TEXT_OFFSET
+- {static} int SCALE_TEXT_X_OFFSET
+- {static} int SCALE_TEXT_Y_OFFSET
+- {static} int CELL_UNIT
+- {static} int HALF_DASH_LEN
+- {static} double SCALE_STEP
+- Font coordinatesFont
+- Font infoFont
+- double scale
+- int X0
+- int Y0
+- boolean isDragging
+- int dragX0
+- int dragY0
+- int tmpX
+- int tmpY
+- Collection<Worker> collection
+- Map<String,Color> colors
++ <<Create>> CoordinatesNet()
++ void updateCollection(Collection<Worker>)
++ void setDefaultView()
+# void paintComponent(Graphics)
+- Color generateColor()
+- void redraw()
++ void addComponent(JComponent,double,double)
+}
+
+
+class client.GUI.calendar.DateLabelFormatter {
+- String datePattern
+- SimpleDateFormat dateFormatter
++ Object stringToValue(String)
++ String valueToString(Object)
+}
+
+
+class client.Controllers.ResourceBundlesController {
+- {static} ResourceBundlesController RESOURCE_BUNDLE_CONTROLLER
+- <<Create>> ResourceBundlesController()
++ {static} ResourceBundlesController getInstance()
++ ResourceBundle getExceptionsBundle()
++ ResourceBundle getMessagesBundle()
++ ResourceBundle getFieldsBundle()
++ ResourceBundle getLogInBundle()
++ ResourceBundle getMainBundle()
++ ResourceBundle getSignUpBundle()
+}
+
+
+class client.Commands.RemoveByIdCommand {
+- long id
++ <<Create>> RemoveByIdCommand()
++ <<Create>> RemoveByIdCommand(long)
++ ServerResponse execute()
++ void initCommandArgs(ArrayList<Serializable>)
+}
+
+
+class client.Constants {
++ {static} boolean SCRIPT_MODE
++ {static} Stack<String> scriptStack
++ {static} int DEFAULT_PORT_NUMBER
++ {static} int CLIENT_TIMEOUT
+}
+
+class client.Commands.UpdateByIdCommand {
+- Worker worker
+- long id
++ <<Create>> UpdateByIdCommand()
++ <<Create>> UpdateByIdCommand(Worker,long)
++ ServerResponse execute()
++ void initCommandArgs(ArrayList<Serializable>)
++ void readData()
+}
+
+
+class client.Commands.RemoveGreaterCommand {
+- Worker worker
++ <<Create>> RemoveGreaterCommand()
++ <<Create>> RemoveGreaterCommand(Worker)
++ ServerResponse execute()
++ void readData()
+}
+
+
+class client.Commands.InfoCommand {
++ <<Create>> InfoCommand()
++ ServerResponse execute()
+}
+
+class client.GUI.GUIController {
+- {static} GUIController GUI_CONTROLLER
+- JFrame mainFrame
+- GUIStates state
+- <<Create>> GUIController()
++ {static} GUIController getInstance()
+- void draw()
++ void setState(GUIStates)
++ void showInfoMessage(LocalizedMessage)
++ void showErrorMessage(LocalizedException)
++ void showWarningMessage(LocalizedMessage)
++ void handleServerResponse(ServerResponse)
+}
+
+
+class client.Commands.ExitCommand {
++ <<Create>> ExitCommand()
++ ServerResponse execute()
+}
+
+class client.GUI.CommandsDialog {
+- JPanel contentPane
+- JPanel headerPanel
+- JPanel mainPanel
+- JLabel headerLabel
+- JButton clearCommandButton
+- JButton executeScriptCommandButton
+- JButton filterLessThanEndDateCommandButton
+- JButton minBySalaryCommandButton
+- JButton removeFirstCommandButton
+- JButton removeGreaterCommandButton
+- JButton removeLowerCommandButton
+- JPanel commandsWithInputPanel
+- JButton removeByIdCommandButton
+- JTextField idTextField
+- Calendar endDateCalendar
++ <<Create>> CommandsDialog()
+- void updateLocale()
+- void $$$setupUI$$$()
+- Font $$$getFont$$$(String,int,int,Font)
++ JComponent $$$getRootComponent$$$()
+- void createUIComponents()
+}
+
+
+class client.GUI.CommandsDialog$ClearCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.CommandsDialog$ExecuteScriptCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.CommandsDialog$MinBySalaryCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.CommandsDialog$FilterLessThanEndDateCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.CommandsDialog$RemoveByIdCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.CommandsDialog$RemoveFirstCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.CommandsDialog$RemoveGreaterCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.CommandsDialog$RemoveLowerCommandListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.Commands.RemoveLowerCommand {
+- Worker worker
++ <<Create>> RemoveLowerCommand()
++ <<Create>> RemoveLowerCommand(Worker)
++ ServerResponse execute()
++ void readData()
+}
+
+
+class client.GUI.LogInForm {
+- JPanel logInRootPanel
+- JButton logInButton
+- JLabel signUpLabel
+- JPanel logInPanel
+- JLabel welcomeLabel
+- JLabel logInLabel
+- JLabel usernameLabel
+- JTextField usernameTextField
+- JLabel passwordLabel
+- JPasswordField passwordField
+- JPanel signUpQuestionPanel
+- JLabel noAccountLabel
+- JComboBox localeComboBox
+- JLabel localeLabel
++ <<Create>> LogInForm()
+- void updateLocale()
+- void $$$setupUI$$$()
+- Font $$$getFont$$$(String,int,int,Font)
++ JComponent $$$getRootComponent$$$()
+- void createUIComponents()
+}
+
+
+class client.GUI.LogInForm$LocaleComboBoxListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.LogInForm$LogInButtonListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.LogInForm$SigUpLabelListener {
++ void mouseClicked(MouseEvent)
+}
+
+class client.GUI.MainForm {
+- {static} MainForm MAIN_FORM
+- JPanel mainRootPanel
+- JPanel menuPanel
+- JPanel dataPanel
+- JPanel controlPanel
+- JButton createButton
+- JButton editButton
+- JButton deleteButton
+- JButton visualizeButton
+- JButton commandsButton
+- JPanel editPanel
+- JPanel visualizePanel
+- JPanel commandsPanel
+- JTable dataTable
+- JLabel currentUserLabel
+- JLabel numberOfWorkersLabel
+- JScrollPane dataScrollPane
+- JLabel workerLabel
+- JPanel collectionInfoPanel
+- JPanel userInfoPanel
+- JPanel mainMenuPanel
+- JPanel currentUserPanel
+- JLabel usernameLabel
+- JComboBox filterComboBox
+- JTextField filterTextField
+- JLabel filterByLabel
+- JPanel filterPanel
+- JLabel separatorLabel
+- JPanel sortPanel
+- JLabel sortLabel
+- JComboBox sortComboBox
+- JPanel localePanel
+- JComboBox localeComboBox
+- JLabel localeLabel
+- VisualizationFrom visualizationFrom
++ boolean VISUALIZATION_MODE
+- ArrayList<String> dataTableColumns
+- <<Create>> MainForm()
++ {static} MainForm getInstance()
++ void resetVisualizationMode()
++ void updateDataTable(Collection<Worker>)
+- void updateLocale()
++ void updateWorker(Worker)
+- void $$$setupUI$$$()
+- Font $$$getFont$$$(String,int,int,Font)
++ JComponent $$$getRootComponent$$$()
+- void createUIComponents()
+}
+
+
+class client.GUI.MainForm$LocaleComboBoxListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.MainForm$CreateButtonActionListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.MainForm$FilterActionListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.MainForm$SortActionListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.MainForm$EditButtonListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.MainForm$DeleteButtonListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.MainForm$CommandsButtonListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.MainForm$VisualizationButtonListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.net.UDPClient {
+- {static} UDPClient UDP_CLIENT
+~ DatagramSocket ds
+~ InetAddress host
+~ int port
+~ int timeout
+- <<Create>> UDPClient()
++ {static} UDPClient getInstance()
++ void init(InetAddress,int,int)
++ void open()
++ void stop()
+- Serializable receiveObject()
+- void sendObject(Serializable)
++ ServerResponse sendAndReceive(ClientRequest)
+}
+
+
+class client.Commands.RemoveFirstCommand {
++ <<Create>> RemoveFirstCommand()
++ ServerResponse execute()
+}
+
+class client.Commands.AddCommand {
+- Worker worker
++ <<Create>> AddCommand()
++ <<Create>> AddCommand(Worker)
++ ServerResponse execute()
++ void readData()
+}
+
+
+class client.Commands.ExecuteScriptCommand {
+- {static} CommandsController commandsController
+- String scriptFilePath
++ <<Create>> ExecuteScriptCommand()
++ <<Create>> ExecuteScriptCommand(String)
++ ServerResponse execute()
++ void initCommandArgs(ArrayList<Serializable>)
+- {static} void scriptMode()
+}
+
+
+class client.GUI.ReadWorkerDialog {
+- JPanel contentPane
+- JPanel headerPanel
+- JPanel mainPanel
+- JPanel menuPanel
+- JLabel headerLabel
+- JButton saveButton
+- JButton cancelButton
+- JTextField nameTextField
+- JComboBox statusComboBox
+- JLabel nameLabel
+- JLabel salaryLabel
+- JLabel startDateLabel
+- JLabel endDateLabel
+- JLabel statusLabel
+- JLabel heightLabel
+- JLabel eyeColorLabel
+- JLabel nationalityLabel
+- JTextField salaryTextField
+- JTextField heightTextField
+- JComboBox eyeColorComboBox
+- JComboBox nationalityComboBox
+- JLabel mainInfoLabel
+- JCheckBox noPersonCheckBox
+- JLabel coordinatesLabel
+- JLabel xLabel
+- JTextField xTextField
+- JLabel yLabel
+- JTextField yTextField
+- JPanel personPanel
+- JLabel personLabel
+- Calendar endDateCalendar
+- Calendar startDateCalendar
+- Worker worker
++ <<Create>> ReadWorkerDialog()
+- void updateLocale()
++ void fillFields(Worker)
+- void onSave()
+- void onCancel()
++ Worker showDialog()
+- Worker readWorker()
+- void $$$setupUI$$$()
+- Font $$$getFont$$$(String,int,int,Font)
++ JComponent $$$getRootComponent$$$()
+- void createUIComponents()
+}
+
+
+class client.Commands.FilterLessThanEndDateCommand {
+- LocalDateTime endDate
++ <<Create>> FilterLessThanEndDateCommand()
++ <<Create>> FilterLessThanEndDateCommand(LocalDateTime)
++ ServerResponse execute()
++ void readData()
+}
+
+
+class client.Commands.MinBySalaryCommand {
++ <<Create>> MinBySalaryCommand()
++ ServerResponse execute()
+}
+
+abstract class client.Commands.ClientCommand {
+# ArrayList<Serializable> arguments
++ <<Create>> ClientCommand(String,String,String)
+# ServerResponse sendAndReceive()
+}
+
+
+interface client.Parsers.Parser {
+~ T parse(String)
+}
+
+class client.GUI.SignUpForm {
+- JPanel signUpRootPanel
+- JLabel signUpLabel
+- JPanel signUpPanel
+- JTextField usernameTextField
+- JTextField passwordTextField
+- JTextField confirmPasswordTextField
+- JButton signUpButton
+- JLabel usernameLabel
+- JLabel passwordLabel
+- JLabel confirmPasswordLabel
+- JLabel welcomeLabel
+- JComboBox localeComboBox
+- JLabel localeLabel
+- JLabel backToLogInLabel
+- JPanel leftPanel
+- JPanel rightPanel
++ <<Create>> SignUpForm()
+- void updateLocale()
+- void createUIComponents()
+- void $$$setupUI$$$()
+- Font $$$getFont$$$(String,int,int,Font)
++ JComponent $$$getRootComponent$$$()
+}
+
+
+class client.GUI.SignUpForm$BackToLogInLabelListener {
++ void mouseClicked(MouseEvent)
+}
+
+class client.GUI.SignUpForm$LocaleComboBoxListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.GUI.SignUpForm$SignUpButtonListener {
++ void actionPerformed(ActionEvent)
+}
+
+class client.Commands.PrintFieldDescendingSalaryCommand {
++ <<Create>> PrintFieldDescendingSalaryCommand()
++ ServerResponse execute()
+}
+
+enum client.GUI.GUIStates {
++  MAIN
++  LOG_IN
++  SIGN_UP
+}
+
+
+
+common.Exceptions.LocalizedException <|-- client.Exceptions.ScriptFileReadingException
+common.Exceptions.LocalizedException <|-- client.Exceptions.RecursiveScriptException
+client.Commands.ClientCommand <|-- client.Commands.ShowCommand
+client.Thread <|-- client.CollectionUpdaterTask
+org.jdatepicker.impl.JDatePickerImpl <|-- client.GUI.calendar.Calendar
+client.GUI.visualization.JComponent <|-- client.GUI.visualization.WorkerImage
+client.Readers.ValueReader <|-- client.Readers.WorkerReader
+client.Commands.ClientCommand <|-- client.Commands.ClearCommand
+client.GUI.visualization.JFrame <|-- client.GUI.visualization.VisualizationFrom
+client.GUI.visualization.JComponent <|-- client.GUI.visualization.CoordinatesNet
+client.GUI.calendar.AbstractFormatter <|-- client.GUI.calendar.DateLabelFormatter
+client.Commands.ClientCommand <|-- client.Commands.RemoveByIdCommand
+client.Commands.ClientCommand <|-- client.Commands.UpdateByIdCommand
+client.Commands.ClientCommand <|-- client.Commands.RemoveGreaterCommand
+client.Commands.ClientCommand <|-- client.Commands.InfoCommand
+common.Commands.UserCommand <|-- client.Commands.ExitCommand
+client.GUI.JDialog <|-- client.GUI.CommandsDialog
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$ClearCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$ClearCommandListener
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$ExecuteScriptCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$ExecuteScriptCommandListener
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$MinBySalaryCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$MinBySalaryCommandListener
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$FilterLessThanEndDateCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$FilterLessThanEndDateCommandListener
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$RemoveByIdCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$RemoveByIdCommandListener
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$RemoveFirstCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$RemoveFirstCommandListener
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$RemoveGreaterCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$RemoveGreaterCommandListener
+client.GUI.CommandsDialog +.. client.GUI.CommandsDialog$RemoveLowerCommandListener
+client.GUI.ActionListener <|.. client.GUI.CommandsDialog$RemoveLowerCommandListener
+client.Commands.ClientCommand <|-- client.Commands.RemoveLowerCommand
+client.GUI.LogInForm +.. client.GUI.LogInForm$LocaleComboBoxListener
+client.GUI.ActionListener <|.. client.GUI.LogInForm$LocaleComboBoxListener
+client.GUI.LogInForm +.. client.GUI.LogInForm$LogInButtonListener
+client.GUI.ActionListener <|.. client.GUI.LogInForm$LogInButtonListener
+client.GUI.LogInForm +.. client.GUI.LogInForm$SigUpLabelListener
+client.GUI.MouseAdapter <|-- client.GUI.LogInForm$SigUpLabelListener
+client.GUI.MainForm +.. client.GUI.MainForm$LocaleComboBoxListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$LocaleComboBoxListener
+client.GUI.MainForm +.. client.GUI.MainForm$CreateButtonActionListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$CreateButtonActionListener
+client.GUI.MainForm +.. client.GUI.MainForm$FilterActionListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$FilterActionListener
+client.GUI.MainForm +.. client.GUI.MainForm$SortActionListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$SortActionListener
+client.GUI.MainForm +.. client.GUI.MainForm$EditButtonListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$EditButtonListener
+client.GUI.MainForm +.. client.GUI.MainForm$DeleteButtonListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$DeleteButtonListener
+client.GUI.MainForm +.. client.GUI.MainForm$CommandsButtonListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$CommandsButtonListener
+client.GUI.MainForm +.. client.GUI.MainForm$VisualizationButtonListener
+client.GUI.ActionListener <|.. client.GUI.MainForm$VisualizationButtonListener
+client.Commands.ClientCommand <|-- client.Commands.RemoveFirstCommand
+client.Commands.ClientCommand <|-- client.Commands.AddCommand
+common.Commands.UserCommand <|-- client.Commands.ExecuteScriptCommand
+client.GUI.JDialog <|-- client.GUI.ReadWorkerDialog
+client.Commands.ClientCommand <|-- client.Commands.FilterLessThanEndDateCommand
+client.Commands.ClientCommand <|-- client.Commands.MinBySalaryCommand
+common.Commands.UserCommand <|-- client.Commands.ClientCommand
+client.GUI.SignUpForm +.. client.GUI.SignUpForm$BackToLogInLabelListener
+client.GUI.MouseAdapter <|-- client.GUI.SignUpForm$BackToLogInLabelListener
+client.GUI.SignUpForm +.. client.GUI.SignUpForm$LocaleComboBoxListener
+client.GUI.ActionListener <|.. client.GUI.SignUpForm$LocaleComboBoxListener
+client.GUI.SignUpForm +.. client.GUI.SignUpForm$SignUpButtonListener
+client.GUI.ActionListener <|.. client.GUI.SignUpForm$SignUpButtonListener
+client.Commands.ClientCommand <|-- client.Commands.PrintFieldDescendingSalaryCommand
+@enduml

@@ -9,6 +9,10 @@ import common.utils.CommonConstants;
 import java.util.*;
 import java.util.function.Predicate;
 
+/**
+ * Singleton class to complete oration with local copy of collection in client app
+ * <p>It support updating, filtering and ordering
+ */
 public class CollectionController {
     private Collection<Worker> collection;
     private Predicate<Worker> filter;
@@ -21,12 +25,19 @@ public class CollectionController {
         }
         return COLLECTION_CONTROLLER;
     }
+
     private CollectionController(){
         filter = o -> true;
         comparator = Comparator.comparing(Worker::getName);
         collection = new ArrayList<>();
     };
 
+    /**
+     * Method to update collection
+     * <p>It sends request to server and if new collection is different from current it complete update
+     * @return True if collection was changed
+     * @throws Exception If any error occurred
+     */
     public boolean updateCollection() throws Exception {
         ServerResponse response = (new ShowCommand()).execute();
         if(response.state() == ResultState.EXCEPTION){
@@ -38,18 +49,32 @@ public class CollectionController {
             collection = newCollection;
             return true;
         }
-
         if(newCollection.stream().toList().equals(collection.stream().toList())) return false;
         collection = newCollection;
         return true;
     }
+
+    /**
+     * Method to get collection after applying current filters and ordering
+     * @return
+     */
     public Collection<Worker> getProcessedCollection(){
         return collection.stream().filter(filter).sorted(comparator).toList();
     }
+
+    /**
+     * Method to get collection
+     * @return
+     */
     public Collection<Worker> getCollection(){
         return collection;
     }
 
+    /**
+     * Method to set filter on collection
+     * @param fieldName Field to filter
+     * @param value Value which should be found
+     */
     public void setFilter(String fieldName, String value){
         filter = switch (fieldName){
             case "id" -> worker -> String.valueOf(worker.getId()).equals(value);
@@ -83,6 +108,10 @@ public class CollectionController {
         };
     }
 
+    /**
+     * Method to set comparator on collection
+     * @param fieldName Field to order by
+     */
     public void setComparator(String fieldName){
         comparator = switch (fieldName){
             case "id" -> Comparator.comparingLong(Worker::getId);

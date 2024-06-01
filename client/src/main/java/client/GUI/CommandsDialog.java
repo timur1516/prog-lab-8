@@ -2,7 +2,6 @@ package client.GUI;
 
 import client.Commands.*;
 import client.Controllers.CollectionController;
-import client.Controllers.LocaleController;
 import client.Controllers.ResourceBundlesController;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
@@ -30,6 +29,9 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Class of CommandsDialog window
+ */
 public class CommandsDialog extends JDialog {
     private JPanel contentPane;
     private JPanel headerPanel;
@@ -67,6 +69,9 @@ public class CommandsDialog extends JDialog {
         removeLowerCommandButton.addActionListener(new RemoveLowerCommandListener());
     }
 
+    /**
+     * Method to update text on all labels
+     */
     private void updateLocale() {
         ResourceBundle labels = ResourceBundlesController.getInstance().getMainBundle();
         headerLabel.setText(labels.getString("commandsHeaderLabel"));
@@ -80,6 +85,9 @@ public class CommandsDialog extends JDialog {
         removeByIdCommandButton.setText(labels.getString("removeByIdCommandButton"));
     }
 
+    /**
+     * Clear command button listener
+     */
     private class ClearCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -87,6 +95,10 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    /**
+     * Execute script command button listener
+     * <p>It creates log file with result of script execution
+     */
     private class ExecuteScriptCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -114,6 +126,10 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    /**
+     * Min by salary command button listener
+     * <p>It shows form of minimal worker
+     */
     private class MinBySalaryCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -130,6 +146,10 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    /**
+     * Filter less than end date command button listener
+     * <p>It applies filter to dataTable
+     */
     private class FilterLessThanEndDateCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -156,6 +176,9 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    /**
+     * Remove by id command button listener
+     */
     private class RemoveByIdCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -168,6 +191,9 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    /**
+     * Remove first command button listener
+     */
     private class RemoveFirstCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -175,6 +201,9 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    /**
+     * Remove greater command button listener
+     */
     private class RemoveGreaterCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -189,6 +218,9 @@ public class CommandsDialog extends JDialog {
         }
     }
 
+    /**
+     * Remove lower command button listener
+     */
     private class RemoveLowerCommandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

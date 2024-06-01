@@ -7,10 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Class of WorkerImage JComponent
+ */
 public class WorkerImage extends JComponent {
     private static final int WORKER_RADIUS = 24;
     private static final int HEAD_RADIUS = 8;
@@ -36,6 +38,10 @@ public class WorkerImage extends JComponent {
         init();
     }
 
+    /**
+     * Method to init workerImage
+     * <p>It sets size and scale of components, starts Timer for animation and adds toolTip text
+     */
     private void init(){
         setSize((int) Math.round(WORKER_RADIUS*2*scale), (int) Math.round(WORKER_RADIUS*2*scale));
 
@@ -59,6 +65,9 @@ public class WorkerImage extends JComponent {
         setToolTipText("<html>" + worker.toString().replace("\n", "<br>").replace("\t", "&emsp;") + "</html>");
     }
 
+    /**
+     * Method to make animation step
+     */
     private void change(){
         headHeight = (headHeight + animationInc);
         if(headHeight == MAX_HEAD_HEIGHT || headHeight == MIN_HEAD_HEIGHT) animationInc *= -1;

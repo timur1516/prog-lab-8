@@ -19,9 +19,17 @@ import java.util.ArrayList;
 public class AddCommand extends ClientCommand {
     private Worker worker;
 
+    /**
+     * Constructor for add command without arguments
+     */
     public AddCommand() {
         super("add", "add new element to collection", "{element}");
     }
+
+    /**
+     * Constructor for add command with worker to add
+     * @param worker
+     */
     public AddCommand(Worker worker) {
         super("add", "add new element to collection", "{element}");
         this.worker = worker;
@@ -29,8 +37,8 @@ public class AddCommand extends ClientCommand {
 
     /**
      * Method to complete add command
-     * <p>It reads new element and then send request for adding to server
-     * @return
+     * <p>It creates request with element to add and send it to server
+     * @return Response from server
      */
     @Override
     public ServerResponse execute() {

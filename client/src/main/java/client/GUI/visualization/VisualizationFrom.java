@@ -10,6 +10,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * Swing form of visualization window
+ */
 public class VisualizationFrom extends JFrame {
     private static final int WINDOW_WIDTH = 700;
     private static final int WINDOW_HEIGHT = 700;

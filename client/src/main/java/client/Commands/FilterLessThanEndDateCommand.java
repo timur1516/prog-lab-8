@@ -27,6 +27,11 @@ public class FilterLessThanEndDateCommand extends ClientCommand {
     public FilterLessThanEndDateCommand() {
         super("filter_less_than_end_date", "print all elements whose endDate is less than given","{endDate}");
     }
+
+    /**
+     * FilterLessThanEndDateCommand constructor with arguments
+     * @param endDate
+     */
     public FilterLessThanEndDateCommand(LocalDateTime endDate) {
         super("filter_less_than_end_date", "print all elements whose endDate is less than given","{endDate}");
         this.endDate = endDate;

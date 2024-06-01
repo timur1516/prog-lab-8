@@ -2,6 +2,9 @@ package client.Controllers;
 
 import java.util.ResourceBundle;
 
+/**
+ * Singleton class to load and control resource files with localized messages and labels
+ */
 public class ResourceBundlesController {
     private static ResourceBundlesController RESOURCE_BUNDLE_CONTROLLER = null;
 

@@ -22,6 +22,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
+/**
+ * Main window form class
+ */
 public class MainForm {
     private static MainForm MAIN_FORM = null;
 
@@ -87,10 +90,17 @@ public class MainForm {
         localeComboBox.addActionListener(new LocaleComboBoxListener());
     }
 
+    /**
+     * Method to reset visualization mode flag
+     */
     public void resetVisualizationMode() {
         VISUALIZATION_MODE = false;
     }
 
+    /**
+     * Method to update data table
+     * @param collection To load
+     */
     public void updateDataTable(Collection<Worker> collection) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -103,6 +113,9 @@ public class MainForm {
         if (VISUALIZATION_MODE) visualizationFrom.update();
     }
 
+    /**
+     * Method to update text on all labels
+     */
     private void updateLocale() {
         ResourceBundle labels = ResourceBundlesController.getInstance().getMainBundle();
         createButton.setText(labels.getString("createButton"));
@@ -135,6 +148,10 @@ public class MainForm {
         sortComboBox.setSelectedIndex(selectedItemIndex);
     }
 
+    /**
+     * Listener of updates in locale ComboBox
+     * <p>If any action performed it gets selected index and change locale
+     */
     private class LocaleComboBoxListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -143,6 +160,9 @@ public class MainForm {
         }
     }
 
+    /**
+     * Create button listener
+     */
     private class CreateButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -153,6 +173,9 @@ public class MainForm {
         }
     }
 
+    /**
+     * Filter comboBox listener
+     */
     private class FilterActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -165,6 +188,9 @@ public class MainForm {
         }
     }
 
+    /**
+     * Sort comboBox listener
+     */
     private class SortActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -176,6 +202,9 @@ public class MainForm {
         }
     }
 
+    /**
+     * Edit button listener
+     */
     private class EditButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -194,6 +223,11 @@ public class MainForm {
         }
     }
 
+    /**
+     * Method to update worker
+     * <p>This method call {@link ReadWorkerDialog} with preset values
+     * @param worker
+     */
     public void updateWorker(Worker worker) {
         if (!worker.getUsername().equals(ClientRequest.getUser().userName())) {
             GUIController.getInstance().showErrorMessage(new AccessDeniedException("accessDeniedExceptionEdit"));
@@ -208,6 +242,9 @@ public class MainForm {
         GUIController.getInstance().handleServerResponse(response);
     }
 
+    /**
+     * Delete button listener
+     */
     private class DeleteButtonListener implements ActionListener {
 
         @Override
@@ -226,6 +263,9 @@ public class MainForm {
         }
     }
 
+    /**
+     * Commands button listener
+     */
     private class CommandsButtonListener implements ActionListener {
 
         @Override
@@ -234,6 +274,9 @@ public class MainForm {
         }
     }
 
+    /**
+     * Visualization button listener
+     */
     private class VisualizationButtonListener implements ActionListener {
 
         @Override

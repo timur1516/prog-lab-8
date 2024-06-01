@@ -18,6 +18,9 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Sign up form class
+ */
 public class SignUpForm {
     private JPanel signUpRootPanel;
     private JLabel signUpLabel;
@@ -44,6 +47,9 @@ public class SignUpForm {
         backToLogInLabel.addMouseListener(new BackToLogInLabelListener());
     }
 
+    /**
+     * Method to update text on all labels
+     */
     private void updateLocale() {
         ResourceBundle labels = ResourceBundlesController.getInstance().getSignUpBundle();
         signUpLabel.setText(labels.getString("signUpLabel"));
@@ -62,14 +68,22 @@ public class SignUpForm {
         localeComboBox.setSelectedIndex(LocaleController.getInstance().getCurrentLocaleNumber());
     }
 
+    /**
+     * Back to log in label listener
+     * <p>It switches to Log in screen
+     */
     private class BackToLogInLabelListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            super.mouseClicked(e);
+            if (e.getButton() != MouseEvent.BUTTON1) return;
             GUIController.getInstance().setState(GUIStates.LOG_IN);
         }
     }
 
+    /**
+     * Listener of updates in locale ComboBox
+     * <p>If any action performed it gets selected index and change locale
+     */
     private class LocaleComboBoxListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -78,6 +92,10 @@ public class SignUpForm {
         }
     }
 
+    /**
+     * Sign up button listener
+     * <p>It tries to complete registration and if it was successful switches to log in window
+     */
     private class SignUpButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

@@ -10,6 +10,11 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.sql.Date;
 
+/**
+ * Class to read and validate value from {@link Calendar}
+ * <p>If values is valid, green frame appears
+ * <p>If values is wrong, red frame appears and error dialog is shown
+ */
 public class CalendarReader {
     public static LocalDateTime readValue(Calendar calendar, Validator<LocalDateTime> validator) throws InvalidDataException {
         calendar.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.RED, Color.RED));

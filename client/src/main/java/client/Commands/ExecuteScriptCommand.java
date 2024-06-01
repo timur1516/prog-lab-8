@@ -27,6 +27,9 @@ import javax.swing.*;
  * @see UserCommand
  */
 public class ExecuteScriptCommand extends UserCommand {
+    /**
+     * Command controller to execute script commands
+     */
     private static final CommandsController commandsController;
 
     static {
@@ -63,6 +66,11 @@ public class ExecuteScriptCommand extends UserCommand {
     public ExecuteScriptCommand() {
         super("execute_script", "read and execute script from given file", "file_name");
     }
+
+    /**
+     * ExecuteScript command with filepath as argumant
+     * @param scriptFilePath Path to script file
+     */
     public ExecuteScriptCommand(String scriptFilePath){
         super("execute_script", "read and execute script from given file", "file_name");
         this.scriptFilePath = scriptFilePath;
@@ -82,8 +90,10 @@ public class ExecuteScriptCommand extends UserCommand {
         File scriptFile;
         try {
             scriptFile = new FileLoader().loadFile(scriptFilePath, "txt", "r", "Script file");
-        } catch (FileNotFoundException | WrongFilePermissionsException e) {
+        } catch (WrongFilePermissionsException e) {
             return new ServerResponse(ResultState.EXCEPTION, e);
+        } catch (FileNotFoundException e) {
+            return new ServerResponse(ResultState.EXCEPTION, new ScriptFileReadingException());
         }
 
         if(!Constants.scriptStack.isEmpty() && Constants.scriptStack.contains(scriptFilePath)){
@@ -131,8 +141,8 @@ public class ExecuteScriptCommand extends UserCommand {
     }
 
     /**
-     * method which is used to work with script file
-     * @throws Exception if any error occurred in process of executing
+     * Method which is used to work with script file
+     * @throws LocalizedException if any error occurred in process of executing
      */
     private static void scriptMode() throws LocalizedException {
         while(Console.getInstance().hasNextLine()) {

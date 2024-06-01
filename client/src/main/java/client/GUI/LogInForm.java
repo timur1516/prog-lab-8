@@ -14,6 +14,9 @@ import java.awt.event.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Class of Log In form
+ */
 public class LogInForm {
     private JPanel logInRootPanel;
     private JButton logInButton;
@@ -38,6 +41,9 @@ public class LogInForm {
         localeComboBox.addActionListener(new LocaleComboBoxListener());
     }
 
+    /**
+     * Method to update text on all labels
+     */
     private void updateLocale() {
         ResourceBundle labels = ResourceBundlesController.getInstance().getLogInBundle();
         logInButton.setText(labels.getString("logInButton"));
@@ -50,6 +56,10 @@ public class LogInForm {
         localeLabel.setText(labels.getString("localeLabel") + ":");
     }
 
+    /**
+     * Listener of updates in locale ComboBox
+     * <p>If any action performed it gets selected index and change locale
+     */
     private class LocaleComboBoxListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -58,6 +68,10 @@ public class LogInForm {
         }
     }
 
+    /**
+     * Log in button listener
+     * <p>It tries to complete authorization and if it was successful switches to main window
+     */
     private class LogInButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -72,10 +86,14 @@ public class LogInForm {
         }
     }
 
+    /**
+     * Sign up label listener
+     * <p>It switches to Sign Up screen user pressed on it
+     */
     private class SigUpLabelListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            super.mouseClicked(e);
+            if (e.getButton() != MouseEvent.BUTTON1) return;
             GUIController.getInstance().setState(GUIStates.SIGN_UP);
         }
     }

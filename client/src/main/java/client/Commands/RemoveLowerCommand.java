@@ -26,6 +26,11 @@ public class RemoveLowerCommand extends ClientCommand {
     public RemoveLowerCommand() {
         super("remove_lower", "remove all elements which are lower than given", "{element}");
     }
+
+    /**
+     * RemoveLowerCommand constructor with arguments
+     * @param worker
+     */
     public RemoveLowerCommand(Worker worker) {
         super("remove_lower", "remove all elements which are lower than given", "{element}");
         this.worker = worker;

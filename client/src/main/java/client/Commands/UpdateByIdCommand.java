@@ -41,6 +41,12 @@ public class UpdateByIdCommand extends ClientCommand {
                 "update value of collection element which id is equal to given",
                 "id", "{element}");
     }
+
+    /**
+     * UpdateByIdCommand constructor with arguments
+     * @param worker
+     * @param id
+     */
     public UpdateByIdCommand(Worker worker, long id) {
         super("update",
                 "update value of collection element which id is equal to given",

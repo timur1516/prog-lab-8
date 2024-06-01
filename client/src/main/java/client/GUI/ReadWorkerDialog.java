@@ -1,6 +1,5 @@
 package client.GUI;
 
-import client.Controllers.LocaleController;
 import client.Controllers.ResourceBundlesController;
 import client.GUI.calendar.Calendar;
 import client.Parsers.WorkerParsers;
@@ -29,6 +28,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+/**
+ * Class of worker form
+ */
 public class ReadWorkerDialog extends JDialog {
     private JPanel contentPane;
     private JPanel headerPanel;
@@ -105,6 +107,9 @@ public class ReadWorkerDialog extends JDialog {
         });
     }
 
+    /**
+     * Method to update text on all labels
+     */
     private void updateLocale() {
         ResourceBundle labels = ResourceBundlesController.getInstance().getMainBundle();
         ResourceBundle fields = ResourceBundlesController.getInstance().getFieldsBundle();
@@ -127,6 +132,10 @@ public class ReadWorkerDialog extends JDialog {
         noPersonCheckBox.setText(labels.getString("noPersonCheckBox"));
     }
 
+    /**
+     * Method to fill all fields with given values
+     * @param worker
+     */
     public void fillFields(Worker worker) {
         LinkedHashMap<String, String> workerList = worker.getAsStringMap();
 
@@ -174,11 +183,20 @@ public class ReadWorkerDialog extends JDialog {
         dispose();
     }
 
+    /**
+     * Method to show dialog
+     * @return Generated worker or null value
+     */
     public Worker showDialog() {
         setVisible(true);
         return worker;
     }
 
+    /**
+     * Method to read worker from fields
+     * @return
+     * @throws InvalidDataException
+     */
     private Worker readWorker() throws InvalidDataException {
         String name = TextFieldReader.readValue(nameTextField, 
                 WorkerValidators.nameValidator, WorkerParsers.stringParser);

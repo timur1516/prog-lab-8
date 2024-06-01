@@ -63,7 +63,7 @@ public class AuthorizationController {
      * @throws SendingDataException If an error occurred while sending data to server
      * @throws ReceivingDataException If an error occurred while receiving data from server
      * @throws AuthorizationException If authorization was not successful
-     * @throws IOException If an error occurred while saving pepper to property file
+     * @throws ConfigurationFileIOException If an error occurred while saving pepper to property file
      */
     public static void singUp(String userName, String password, String confirmedPassword) throws SendingDataException, ReceivingDataException, AuthorizationException, ConfigurationFileIOException {
         if(userName.isEmpty()){

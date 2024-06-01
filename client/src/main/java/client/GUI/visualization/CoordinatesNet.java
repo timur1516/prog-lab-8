@@ -7,6 +7,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ * Class of coordinates net custom component
+ * <p>It has various settings and allows to locate objects in specified coordinates
+ * <p>It also supports dragging by mouse and scaling using mouseWheel
+ */
 public class CoordinatesNet extends JComponent {
     private static final int LEFT_OFFSET = 50;
     private static final int TOP_OFFSET = 20;

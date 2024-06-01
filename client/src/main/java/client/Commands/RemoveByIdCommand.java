@@ -31,6 +31,11 @@ public class RemoveByIdCommand extends ClientCommand {
     public RemoveByIdCommand() {
         super("remove_by_id", "remove element with given id from collection", "id");
     }
+
+    /**
+     * RemoveByIdCommand constructor with arguments
+     * @param id
+     */
     public RemoveByIdCommand(long id) {
         super("remove_by_id", "remove element with given id from collection", "id");
         this.id = id;

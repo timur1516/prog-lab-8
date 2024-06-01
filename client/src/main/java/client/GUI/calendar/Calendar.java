@@ -6,8 +6,11 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import java.util.Properties;
 
+/**
+ * Class of calendar swing component
+ */
 public class Calendar extends JDatePickerImpl {
-    private static Properties p = new Properties();
+    private static final Properties p = new Properties();
 
     static {
         p.put("text.today", "Today");
