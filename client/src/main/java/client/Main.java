@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.*;
 
 import client.GUI.GUIController;
 import client.net.UDPClient;
@@ -36,7 +37,9 @@ public class Main {
         } catch (Exception ignored) {}
         GUIController.getInstance();
 
-        new CollectionUpdaterTask().start();
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        executorService.scheduleAtFixedRate(new CollectionUpdaterTask(), 1, 5, TimeUnit.SECONDS);
+
 
         try {
             serverPort = Constants.DEFAULT_PORT_NUMBER;

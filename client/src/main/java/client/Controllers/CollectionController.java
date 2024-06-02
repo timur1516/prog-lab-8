@@ -40,7 +40,7 @@ public class CollectionController {
      */
     public boolean updateCollection() throws Exception {
         ServerResponse response = (new ShowCommand()).execute();
-        if(response.state() == ResultState.EXCEPTION){
+        if (response.state() == ResultState.EXCEPTION) {
             throw (Exception) response.data();
         }
         Collection<Worker> newCollection = (Collection<Worker>) response.data();
