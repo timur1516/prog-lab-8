@@ -8,6 +8,8 @@ import common.utils.Serializer;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static common.utils.CommonConstants.PACKET_SIZE;
 
@@ -16,6 +18,7 @@ import static common.utils.CommonConstants.PACKET_SIZE;
  */
 public class UDPClient {
     private static UDPClient UDP_CLIENT = null;
+    private final Lock lock;
     /**
      * Datagram socket for client
      */
@@ -33,7 +36,9 @@ public class UDPClient {
      */
     int timeout;
 
-    private UDPClient(){};
+    private UDPClient(){
+        lock = new ReentrantLock();
+    };
     public static synchronized UDPClient getInstance(){
         if(UDP_CLIENT == null){
             UDP_CLIENT = new UDPClient();
@@ -102,8 +107,15 @@ public class UDPClient {
         }
     }
 
-    public synchronized ServerResponse sendAndReceive(ClientRequest request) throws SendingDataException, ReceivingDataException {
-        sendObject(request);
-        return (ServerResponse) receiveObject();
+    public ServerResponse sendAndReceive(ClientRequest request) throws SendingDataException, ReceivingDataException {
+        lock.lock();
+        try {
+            sendObject(request);
+            return (ServerResponse) receiveObject();
+        } catch (SendingDataException | ReceivingDataException e){
+            throw e;
+        } finally {
+            lock.unlock();
+        }
     }
 }

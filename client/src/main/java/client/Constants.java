@@ -22,5 +22,5 @@ public class Constants {
     /**
      * Timeout for udp client in milliseconds
      */
-    public static final int CLIENT_TIMEOUT = 10000;
+    public static final int CLIENT_TIMEOUT = 5000;
 }
